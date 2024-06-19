@@ -201,3 +201,4 @@ CREATE TABLE TiempoActividades (
     FOREIGN KEY (idEmpleado) REFERENCES Empleados(idEmpleado),
     FOREIGN KEY (idObservador) REFERENCES Observadores(idObservador)
 );
+ -- COmentario
