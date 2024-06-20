@@ -29,6 +29,15 @@ CREATE TABLE Compras (
     FOREIGN KEY (idProveedor) REFERENCES Proveedores(idProveedor)
 );
 
+CREATE TABLE Ingredientes (
+    idIngrediente INT PRIMARY KEY,
+    ingrediente VARCHAR(255),
+    idProveedor INT,
+    cantidadDisponible INT,
+    costo FLOAT,
+    FOREIGN KEY (idProveedor) REFERENCES Proveedores(idProveedor)
+);
+
 CREATE TABLE DetalleCompra (
     idDetalleCompra INT PRIMARY KEY,
     idCompra INT,
@@ -40,14 +49,7 @@ CREATE TABLE DetalleCompra (
     FOREIGN KEY (idIngrediente) REFERENCES Ingredientes(idIngrediente)
 );
 
-CREATE TABLE Ingredientes (
-    idIngrediente INT PRIMARY KEY,
-    ingrediente VARCHAR(255),
-    idProveedor INT,
-    cantidadDisponible INT,
-    costo FLOAT,
-    FOREIGN KEY (idProveedor) REFERENCES Proveedores(idProveedor)
-);
+
 
 CREATE TABLE IngredientesPrincipales (
     idIngredientePrincipal INT PRIMARY KEY,
@@ -201,4 +203,3 @@ CREATE TABLE TiempoActividades (
     FOREIGN KEY (idEmpleado) REFERENCES Empleados(idEmpleado),
     FOREIGN KEY (idObservador) REFERENCES Observadores(idObservador)
 );
- -- COmentario
