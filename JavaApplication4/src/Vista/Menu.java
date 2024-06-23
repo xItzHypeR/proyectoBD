@@ -16,13 +16,15 @@ public class Menu extends javax.swing.JPanel {
 
     private EventMenuSeleccionado event;
 
-    public void addEvent(EventMenuSeleccionado event) {
+    public void addEventMenuSelected(EventMenuSeleccionado event) {
         this.event = event;
+        listMenu1.addEventMenuSelected(event);
     }
 
     public Menu() {
         initComponents();
         setOpaque(false);
+        listMenu1.setOpaque(true);
         init();
     }
     private JFrame Main;
@@ -47,29 +49,28 @@ public class Menu extends javax.swing.JPanel {
 
         jPanel1.setBackground(new java.awt.Color(153, 255, 153));
 
+        listMenu1.setBackground(new java.awt.Color(153, 255, 153));
+        listMenu1.setForeground(new java.awt.Color(153, 255, 153));
         jScrollPane1.setViewportView(listMenu1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(0, 26, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -77,30 +78,18 @@ public class Menu extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void iEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {
-        PanelEmpleados panelEmpleados = new PanelEmpleados();
-        Main.getContentPane().add(panelEmpleados);
-        Main.revalidate();
-        Main.repaint();
 
-    }
-
-    private void ISalirMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_ISalirMouseClicked
-        System.exit(0);
-    }// GEN-LAST:event_ISalirMouseClicked
 
     private void init() {
-        listMenu1.addItem(new Model_Menu("1", "Empleados",
-        Model_Menu.MenuType.MENU));
-        // listMenu1.addItem(new Model_Menu("2", "UI Elements",
-        // Model_Menu.MenuType.MENU));
-        // listMenu1.addItem(new Model_Menu("3", "Comonents",
-        // Model_Menu.MenuType.MENU));
-        // listMenu1.addItem(new Model_Menu("4", "Forms Stuff",
-        // Model_Menu.MenuType.MENU));
-        // listMenu1.addItem(new Model_Menu("5", "Date Table",
-        // Model_Menu.MenuType.MENU));
-        // listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+       listMenu1.addItem(new Model_Menu("1", "Empleados", Model_Menu.MenuType.MENU));
+       listMenu1.addItem(new Model_Menu("2", "Inventario", Model_Menu.MenuType.MENU));
+       listMenu1.addItem(new Model_Menu("3", "Graficos",Model_Menu.MenuType.MENU));
+       listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+       listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+       listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+       listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+       listMenu1.addItem(new Model_Menu("4", "Salir",Model_Menu.MenuType.MENU));
+
 
         // listMenu1.addItem(new Model_Menu("", "My Data", Model_Menu.MenuType.TITLE));
         // listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));

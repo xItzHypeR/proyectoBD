@@ -10,6 +10,7 @@ import java.awt.RenderingHints;
 public class MenuItem extends javax.swing.JPanel {
 
     private boolean selected;
+    private boolean over;
 
     public MenuItem(Model_Menu data) {
         initComponents();
@@ -31,6 +32,11 @@ public class MenuItem extends javax.swing.JPanel {
         repaint();
     }
 
+    public void setOver(boolean over) {
+        this.over = over;
+        repaint();
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -40,7 +46,8 @@ public class MenuItem extends javax.swing.JPanel {
 
         lbIcon.setForeground(new java.awt.Color(255, 255, 255));
 
-        lbName.setForeground(new java.awt.Color(255, 255, 255));
+        lbName.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        lbName.setForeground(new java.awt.Color(0, 0, 0));
         lbName.setText("Menu Name");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -63,10 +70,14 @@ public class MenuItem extends javax.swing.JPanel {
 
     @Override
     protected void paintComponent(Graphics grphcs) {
-        if (selected) {
+        if (selected || over) {
             Graphics2D g2 = (Graphics2D) grphcs;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(new Color(255, 255, 255, 80));
+            if (selected) {
+                g2.setColor(new Color(255, 255, 255, 80));
+            } else {
+                g2.setColor(new Color(255, 255, 255, 20));
+            }
             g2.fillRoundRect(10, 0, getWidth() - 20, getHeight(), 5, 5);
         }
         super.paintComponent(grphcs);

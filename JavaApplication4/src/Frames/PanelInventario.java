@@ -9,12 +9,12 @@ package Frames;
  *
  * @author gpera
  */
-public class PanelEmpleados extends javax.swing.JPanel {
+public class PanelInventario extends javax.swing.JPanel {
 
     /**
      * Creates new form PanelEmpleados
      */
-    public PanelEmpleados() {
+    public PanelInventario() {
         initComponents();
     }
 
@@ -30,34 +30,29 @@ public class PanelEmpleados extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
-        setMaximumSize(new java.awt.Dimension(678, 600));
-        setMinimumSize(new java.awt.Dimension(678, 600));
-        setPreferredSize(new java.awt.Dimension(678, 600));
-
         jPanel1.setBackground(new java.awt.Color(153, 153, 153));
-        jPanel1.setMaximumSize(new java.awt.Dimension(678, 800));
-        jPanel1.setMinimumSize(new java.awt.Dimension(678, 800));
-        jPanel1.setPreferredSize(new java.awt.Dimension(678, 800));
+        jPanel1.setMaximumSize(new java.awt.Dimension(822, 800));
+        jPanel1.setMinimumSize(new java.awt.Dimension(822, 800));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("Este es el panel empleados");
+        jLabel1.setText("Este es el panel Inventario");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(198, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(224, 224, 224)
                 .addComponent(jLabel1)
-                .addGap(168, 168, 168))
+                .addContainerGap(296, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(353, 353, 353)
+                .addGap(345, 345, 345)
                 .addComponent(jLabel1)
-                .addContainerGap(415, Short.MAX_VALUE))
+                .addContainerGap(423, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

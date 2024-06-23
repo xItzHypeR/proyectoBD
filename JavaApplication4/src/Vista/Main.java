@@ -6,34 +6,54 @@
 package Vista;
 
 import Frames.PanelEmpleados;
+import Frames.PanelInventario;
+import Frames.PanelGraficos;
+import javax.swing.JComponent;
+
 import principal.EventMenuSeleccionado;
         
 public class Main extends javax.swing.JFrame {
 
     private PanelEmpleados panelEmpleados;
+    private PanelInventario panelInventario;
+    private PanelGraficos panelGraficos;
 
     public Main() {
         initComponents();
        
         panelEmpleados = new PanelEmpleados();
-        /*
-        menu1.EventMenuSeleccionado(new EventMenuSeleccionado() {
+        panelInventario = new PanelInventario();
+        panelGraficos = new PanelGraficos();
+      
+        menu1.addEventMenuSelected(new EventMenuSeleccionado() {
             @Override
             public void selected(int index) {
+                System.out.println("Select index: " + index);
                 if (index == 0) {
                     setForm(panelEmpleados);
+                    
                 } else if (index == 1) {
                     setForm(panelInventario);
+                    
                 } else if (index == 2) {
                     setForm(panelGraficos);
 
+                } else if (index == 7) {
+                    System.exit(0);
                 }
 
             }
         });
-        */
+         setForm(new PanelEmpleados());
     }
+    
 
+        private void setForm(JComponent com) {
+        mainPanel.removeAll();
+        mainPanel.add(com);
+        mainPanel.repaint();
+        mainPanel.revalidate();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,54 +66,46 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        borde1 = new Vista.Borde();
-        sp = new javax.swing.JScrollPane();
-        panelEmpleados1 = new Frames.PanelEmpleados();
+        borde2 = new Vista.Borde();
         menu1 = new Vista.Menu();
+        mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        borde1.setMaximumSize(new java.awt.Dimension(1000, 800));
-        borde1.setMinimumSize(new java.awt.Dimension(1000, 800));
+        borde2.setMaximumSize(new java.awt.Dimension(1000, 800));
+        borde2.setMinimumSize(new java.awt.Dimension(1000, 800));
 
-        sp.setBackground(new java.awt.Color(153, 153, 255));
-        sp.setBorder(null);
-        sp.setForeground(new java.awt.Color(153, 153, 255));
-        sp.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        sp.setViewportView(panelEmpleados1);
+        mainPanel.setOpaque(false);
+        mainPanel.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout borde1Layout = new javax.swing.GroupLayout(borde1);
-        borde1.setLayout(borde1Layout);
-        borde1Layout.setHorizontalGroup(
-            borde1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(borde1Layout.createSequentialGroup()
-                .addContainerGap()
+        javax.swing.GroupLayout borde2Layout = new javax.swing.GroupLayout(borde2);
+        borde2.setLayout(borde2Layout);
+        borde2Layout.setHorizontalGroup(
+            borde2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(borde2Layout.createSequentialGroup()
                 .addComponent(menu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp, javax.swing.GroupLayout.DEFAULT_SIZE, 816, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        borde1Layout.setVerticalGroup(
-            borde1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(borde1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(sp, javax.swing.GroupLayout.DEFAULT_SIZE, 794, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(borde1Layout.createSequentialGroup()
-                .addComponent(menu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 2, Short.MAX_VALUE))
+        borde2Layout.setVerticalGroup(
+            borde2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borde2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(borde2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(menu1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(borde1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(borde2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(borde1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(borde2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -146,11 +158,10 @@ public class Main extends javax.swing.JFrame {
 */
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private Vista.Borde borde1;
+    private Vista.Borde borde2;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JPanel mainPanel;
     private Vista.Menu menu1;
-    private Frames.PanelEmpleados panelEmpleados1;
-    private javax.swing.JScrollPane sp;
     // End of variables declaration//GEN-END:variables
 
 }
