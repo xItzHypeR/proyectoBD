@@ -12,7 +12,6 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import Entities.Empleados;
 import Entities.Observadores;
 import Entities.Tiempoactividades;
 import Entities.Tiempos;
@@ -40,11 +39,6 @@ public class TiempoactividadesJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Empleados idEmpleado = tiempoactividades.getIdEmpleado();
-            if (idEmpleado != null) {
-                idEmpleado = em.getReference(idEmpleado.getClass(), idEmpleado.getIdEmpleado());
-                tiempoactividades.setIdEmpleado(idEmpleado);
-            }
             Observadores idObservador = tiempoactividades.getIdObservador();
             if (idObservador != null) {
                 idObservador = em.getReference(idObservador.getClass(), idObservador.getIdObservador());
@@ -56,10 +50,6 @@ public class TiempoactividadesJpaController implements Serializable {
                 tiempoactividades.setIdTiempos(idTiempos);
             }
             em.persist(tiempoactividades);
-            if (idEmpleado != null) {
-                idEmpleado.getTiempoactividadesList().add(tiempoactividades);
-                idEmpleado = em.merge(idEmpleado);
-            }
             if (idObservador != null) {
                 idObservador.getTiempoactividadesList().add(tiempoactividades);
                 idObservador = em.merge(idObservador);
@@ -87,16 +77,10 @@ public class TiempoactividadesJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Tiempoactividades persistentTiempoactividades = em.find(Tiempoactividades.class, tiempoactividades.getIdTiempoActividad());
-            Empleados idEmpleadoOld = persistentTiempoactividades.getIdEmpleado();
-            Empleados idEmpleadoNew = tiempoactividades.getIdEmpleado();
             Observadores idObservadorOld = persistentTiempoactividades.getIdObservador();
             Observadores idObservadorNew = tiempoactividades.getIdObservador();
             Tiempos idTiemposOld = persistentTiempoactividades.getIdTiempos();
             Tiempos idTiemposNew = tiempoactividades.getIdTiempos();
-            if (idEmpleadoNew != null) {
-                idEmpleadoNew = em.getReference(idEmpleadoNew.getClass(), idEmpleadoNew.getIdEmpleado());
-                tiempoactividades.setIdEmpleado(idEmpleadoNew);
-            }
             if (idObservadorNew != null) {
                 idObservadorNew = em.getReference(idObservadorNew.getClass(), idObservadorNew.getIdObservador());
                 tiempoactividades.setIdObservador(idObservadorNew);
@@ -106,14 +90,6 @@ public class TiempoactividadesJpaController implements Serializable {
                 tiempoactividades.setIdTiempos(idTiemposNew);
             }
             tiempoactividades = em.merge(tiempoactividades);
-            if (idEmpleadoOld != null && !idEmpleadoOld.equals(idEmpleadoNew)) {
-                idEmpleadoOld.getTiempoactividadesList().remove(tiempoactividades);
-                idEmpleadoOld = em.merge(idEmpleadoOld);
-            }
-            if (idEmpleadoNew != null && !idEmpleadoNew.equals(idEmpleadoOld)) {
-                idEmpleadoNew.getTiempoactividadesList().add(tiempoactividades);
-                idEmpleadoNew = em.merge(idEmpleadoNew);
-            }
             if (idObservadorOld != null && !idObservadorOld.equals(idObservadorNew)) {
                 idObservadorOld.getTiempoactividadesList().remove(tiempoactividades);
                 idObservadorOld = em.merge(idObservadorOld);
@@ -158,11 +134,6 @@ public class TiempoactividadesJpaController implements Serializable {
                 tiempoactividades.getIdTiempoActividad();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The tiempoactividades with id " + id + " no longer exists.", enfe);
-            }
-            Empleados idEmpleado = tiempoactividades.getIdEmpleado();
-            if (idEmpleado != null) {
-                idEmpleado.getTiempoactividadesList().remove(tiempoactividades);
-                idEmpleado = em.merge(idEmpleado);
             }
             Observadores idObservador = tiempoactividades.getIdObservador();
             if (idObservador != null) {

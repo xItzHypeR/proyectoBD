@@ -20,10 +20,10 @@
     <class>Entities.Detallecompra</class>
     <class>Entities.Facturas</class>
     <class>Entities.Inventarios</class>
-    <class>Entities.Empleados</class>
     <class>Entities.Observadores</class>
     <class>Entities.Tiempoactividades</class>
     <class>Entities.Productos</class>
+    <class>Entities.Empleados</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/MedicinaNatural?zeroDateTimeBehavior=convertToNull "/>
       <property name="javax.persistence.jdbc.user" value="root"/>

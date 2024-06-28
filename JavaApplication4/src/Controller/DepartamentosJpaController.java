@@ -9,15 +9,13 @@ import Controller.exceptions.NonexistentEntityException;
 import Controller.exceptions.PreexistingEntityException;
 import Entities.Departamentos;
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import Entities.Empleados;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 
 /**
  *
@@ -35,24 +33,11 @@ public class DepartamentosJpaController implements Serializable {
     }
 
     public void create(Departamentos departamentos) throws PreexistingEntityException, Exception {
-        if (departamentos.getEmpleadosList() == null) {
-            departamentos.setEmpleadosList(new ArrayList<Empleados>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Empleados> attachedEmpleadosList = new ArrayList<Empleados>();
-            for (Empleados empleadosListEmpleadosToAttach : departamentos.getEmpleadosList()) {
-                empleadosListEmpleadosToAttach = em.getReference(empleadosListEmpleadosToAttach.getClass(), empleadosListEmpleadosToAttach.getIdEmpleado());
-                attachedEmpleadosList.add(empleadosListEmpleadosToAttach);
-            }
-            departamentos.setEmpleadosList(attachedEmpleadosList);
             em.persist(departamentos);
-            for (Empleados empleadosListEmpleados : departamentos.getEmpleadosList()) {
-                empleadosListEmpleados.getDepartamentosList().add(departamentos);
-                empleadosListEmpleados = em.merge(empleadosListEmpleados);
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findDepartamentos(departamentos.getIdDepartamento()) != null) {
@@ -71,29 +56,7 @@ public class DepartamentosJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Departamentos persistentDepartamentos = em.find(Departamentos.class, departamentos.getIdDepartamento());
-            List<Empleados> empleadosListOld = persistentDepartamentos.getEmpleadosList();
-            List<Empleados> empleadosListNew = departamentos.getEmpleadosList();
-            List<Empleados> attachedEmpleadosListNew = new ArrayList<Empleados>();
-            for (Empleados empleadosListNewEmpleadosToAttach : empleadosListNew) {
-                empleadosListNewEmpleadosToAttach = em.getReference(empleadosListNewEmpleadosToAttach.getClass(), empleadosListNewEmpleadosToAttach.getIdEmpleado());
-                attachedEmpleadosListNew.add(empleadosListNewEmpleadosToAttach);
-            }
-            empleadosListNew = attachedEmpleadosListNew;
-            departamentos.setEmpleadosList(empleadosListNew);
             departamentos = em.merge(departamentos);
-            for (Empleados empleadosListOldEmpleados : empleadosListOld) {
-                if (!empleadosListNew.contains(empleadosListOldEmpleados)) {
-                    empleadosListOldEmpleados.getDepartamentosList().remove(departamentos);
-                    empleadosListOldEmpleados = em.merge(empleadosListOldEmpleados);
-                }
-            }
-            for (Empleados empleadosListNewEmpleados : empleadosListNew) {
-                if (!empleadosListOld.contains(empleadosListNewEmpleados)) {
-                    empleadosListNewEmpleados.getDepartamentosList().add(departamentos);
-                    empleadosListNewEmpleados = em.merge(empleadosListNewEmpleados);
-                }
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -122,11 +85,6 @@ public class DepartamentosJpaController implements Serializable {
                 departamentos.getIdDepartamento();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The departamentos with id " + id + " no longer exists.", enfe);
-            }
-            List<Empleados> empleadosList = departamentos.getEmpleadosList();
-            for (Empleados empleadosListEmpleados : empleadosList) {
-                empleadosListEmpleados.getDepartamentosList().remove(departamentos);
-                empleadosListEmpleados = em.merge(empleadosListEmpleados);
             }
             em.remove(departamentos);
             em.getTransaction().commit();

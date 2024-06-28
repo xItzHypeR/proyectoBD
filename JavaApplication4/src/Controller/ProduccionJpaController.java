@@ -7,16 +7,15 @@ package Controller;
 
 import Controller.exceptions.NonexistentEntityException;
 import Controller.exceptions.PreexistingEntityException;
+import Entities.Produccion;
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import Entities.Empleados;
-import Entities.Produccion;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 
 /**
  *
@@ -38,16 +37,7 @@ public class ProduccionJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Empleados idEmpleado = produccion.getIdEmpleado();
-            if (idEmpleado != null) {
-                idEmpleado = em.getReference(idEmpleado.getClass(), idEmpleado.getIdEmpleado());
-                produccion.setIdEmpleado(idEmpleado);
-            }
             em.persist(produccion);
-            if (idEmpleado != null) {
-                idEmpleado.getProduccionList().add(produccion);
-                idEmpleado = em.merge(idEmpleado);
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findProduccion(produccion.getIdProduccion()) != null) {
@@ -66,22 +56,7 @@ public class ProduccionJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Produccion persistentProduccion = em.find(Produccion.class, produccion.getIdProduccion());
-            Empleados idEmpleadoOld = persistentProduccion.getIdEmpleado();
-            Empleados idEmpleadoNew = produccion.getIdEmpleado();
-            if (idEmpleadoNew != null) {
-                idEmpleadoNew = em.getReference(idEmpleadoNew.getClass(), idEmpleadoNew.getIdEmpleado());
-                produccion.setIdEmpleado(idEmpleadoNew);
-            }
             produccion = em.merge(produccion);
-            if (idEmpleadoOld != null && !idEmpleadoOld.equals(idEmpleadoNew)) {
-                idEmpleadoOld.getProduccionList().remove(produccion);
-                idEmpleadoOld = em.merge(idEmpleadoOld);
-            }
-            if (idEmpleadoNew != null && !idEmpleadoNew.equals(idEmpleadoOld)) {
-                idEmpleadoNew.getProduccionList().add(produccion);
-                idEmpleadoNew = em.merge(idEmpleadoNew);
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -110,11 +85,6 @@ public class ProduccionJpaController implements Serializable {
                 produccion.getIdProduccion();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The produccion with id " + id + " no longer exists.", enfe);
-            }
-            Empleados idEmpleado = produccion.getIdEmpleado();
-            if (idEmpleado != null) {
-                idEmpleado.getProduccionList().remove(produccion);
-                idEmpleado = em.merge(idEmpleado);
             }
             em.remove(produccion);
             em.getTransaction().commit();

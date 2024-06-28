@@ -7,21 +7,19 @@ package Entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -38,14 +36,20 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Empleados.findByNombreEmpleado", query = "SELECT e FROM Empleados e WHERE e.nombreEmpleado = :nombreEmpleado")
     , @NamedQuery(name = "Empleados.findByApellidoEmpleado", query = "SELECT e FROM Empleados e WHERE e.apellidoEmpleado = :apellidoEmpleado")
     , @NamedQuery(name = "Empleados.findByCargo", query = "SELECT e FROM Empleados e WHERE e.cargo = :cargo")
-    , @NamedQuery(name = "Empleados.findByFechaContratacion", query = "SELECT e FROM Empleados e WHERE e.fechaContratacion = :fechaContratacion")
     , @NamedQuery(name = "Empleados.findBySalario", query = "SELECT e FROM Empleados e WHERE e.salario = :salario")
     , @NamedQuery(name = "Empleados.findByTelefono", query = "SELECT e FROM Empleados e WHERE e.telefono = :telefono")
     , @NamedQuery(name = "Empleados.findByEmail", query = "SELECT e FROM Empleados e WHERE e.email = :email")})
 public class Empleados implements Serializable {
 
+    @JoinTable(name = "empleadodepartamento", joinColumns = {
+        @JoinColumn(name = "idEmpleado", referencedColumnName = "idEmpleado")}, inverseJoinColumns = {
+        @JoinColumn(name = "idDepartamento", referencedColumnName = "idDepartamento")})
+    @ManyToMany
+    private List<Departamentos> departamentosList;
+
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idEmpleado")
     private Integer idEmpleado;
@@ -55,9 +59,6 @@ public class Empleados implements Serializable {
     private String apellidoEmpleado;
     @Column(name = "cargo")
     private String cargo;
-    @Column(name = "fechaContratacion")
-    @Temporal(TemporalType.DATE)
-    private Date fechaContratacion;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "salario")
     private BigDecimal salario;
@@ -65,15 +66,6 @@ public class Empleados implements Serializable {
     private String telefono;
     @Column(name = "email")
     private String email;
-    @JoinTable(name = "empleadodepartamento", joinColumns = {
-        @JoinColumn(name = "idEmpleado", referencedColumnName = "idEmpleado")}, inverseJoinColumns = {
-        @JoinColumn(name = "idDepartamento", referencedColumnName = "idDepartamento")})
-    @ManyToMany
-    private List<Departamentos> departamentosList;
-    @OneToMany(mappedBy = "idEmpleado")
-    private List<Tiempoactividades> tiempoactividadesList;
-    @OneToMany(mappedBy = "idEmpleado")
-    private List<Produccion> produccionList;
 
     public Empleados() {
     }
@@ -114,14 +106,6 @@ public class Empleados implements Serializable {
         this.cargo = cargo;
     }
 
-    public Date getFechaContratacion() {
-        return fechaContratacion;
-    }
-
-    public void setFechaContratacion(Date fechaContratacion) {
-        this.fechaContratacion = fechaContratacion;
-    }
-
     public BigDecimal getSalario() {
         return salario;
     }
@@ -144,33 +128,6 @@ public class Empleados implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    @XmlTransient
-    public List<Departamentos> getDepartamentosList() {
-        return departamentosList;
-    }
-
-    public void setDepartamentosList(List<Departamentos> departamentosList) {
-        this.departamentosList = departamentosList;
-    }
-
-    @XmlTransient
-    public List<Tiempoactividades> getTiempoactividadesList() {
-        return tiempoactividadesList;
-    }
-
-    public void setTiempoactividadesList(List<Tiempoactividades> tiempoactividadesList) {
-        this.tiempoactividadesList = tiempoactividadesList;
-    }
-
-    @XmlTransient
-    public List<Produccion> getProduccionList() {
-        return produccionList;
-    }
-
-    public void setProduccionList(List<Produccion> produccionList) {
-        this.produccionList = produccionList;
     }
 
     @Override
@@ -196,6 +153,15 @@ public class Empleados implements Serializable {
     @Override
     public String toString() {
         return "Entities.Empleados[ idEmpleado=" + idEmpleado + " ]";
+    }
+
+    @XmlTransient
+    public List<Departamentos> getDepartamentosList() {
+        return departamentosList;
+    }
+
+    public void setDepartamentosList(List<Departamentos> departamentosList) {
+        this.departamentosList = departamentosList;
     }
     
 }

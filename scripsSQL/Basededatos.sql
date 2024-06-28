@@ -143,11 +143,10 @@ CREATE TABLE Departamentos (
 );
 
 CREATE TABLE Empleados (
-    idEmpleado INT PRIMARY KEY,
+    idEmpleado INT auto_increment PRIMARY KEY,
     nombreEmpleado VARCHAR(255),
     apellidoEmpleado VARCHAR(255),
     cargo VARCHAR(255),
-    fechaContratacion DATE,
     salario DECIMAL(10, 2),
     telefono VARCHAR(255),
     email VARCHAR(255)
@@ -194,6 +193,7 @@ CREATE TABLE Observadores (
     nombreObservador VARCHAR(255)
 );
 
+
 CREATE TABLE TiempoActividades (
     idTiempoActividad INT PRIMARY KEY,
     idTiempos INT,
@@ -203,3 +203,80 @@ CREATE TABLE TiempoActividades (
     FOREIGN KEY (idEmpleado) REFERENCES Empleados(idEmpleado),
     FOREIGN KEY (idObservador) REFERENCES Observadores(idObservador)
 );
+
+alter table TiempoActividades modify column idTiempoActividad INT auto_increment;
+
+INSERT INTO Empleados (nombreEmpleado, apellidoEmpleado, cargo, salario, telefono, email)
+VALUES
+('María Pérez', 'García', 'Ingeniera de Software', 2500.00, '555-555-5555', 'maria.garcia@email.com'),
+('Juan López', 'Martínez', 'Desarrollador Web', 1800.00, '555-555-5556', 'juan.lopez@email.com'),
+('Ana González', 'Flores', 'Analista de Datos', 3000.00, '555-555-5557', 'ana.gonzalez@email.com'),
+('Pedro Rodríguez', 'Sánchez', 'Diseñador Gráfico', 2200.00, '555-555-5558', 'pedro.rodriguez@email.com'),
+('Isabel Jiménez', 'Navarro', 'Especialista en Marketing', 2700.00, '555-555-5559', 'isabel.jimenez@email.com'),
+('Carlos Moreno', 'Fernández', 'Administrador de Redes', 2400.00, '555-555-5560', 'carlos.moreno@email.com'),
+('Sandra Rubio', 'Alonso', 'Contador', 2100.00, '555-555-5561', 'sandra.rubio@email.com'),
+('David Ruiz', 'Gómez', 'Asistente de Recursos Humanos', 1900.00, '555-555-5562', 'david.ruiz@email.com'),
+('Laura Gutiérrez', 'Díaz', 'Secretaria', 1700.00, '555-555-5563', 'laura.gutierrez@email.com'),
+('Francisco Vázquez', 'Blanco', 'Mensajero', 1600.00, '555-555-5564', 'francisco.vazquez@email.com');
+
+
+INSERT INTO TiemposMin (tiempoMin) VALUES
+  ('01:00'),
+  ('05:00'),
+  ('03:00'),
+  ('05:00'),
+  ('04:00'),
+  ('05:00'),
+  ('03:00'),
+  ('05:00'),
+  ('01:00'),
+  ('14:00');
+
+INSERT INTO Observadores (nombreObservador) VALUES
+  ('Juan Pérez'),
+  ('Ana López'),
+  ('Carlos Gutiérrez'),
+  ('María Martínez'),
+  ('Pedro Rodríguez'),
+  ('Isabel Fernández'),
+  ('Diego Sánchez'),
+  ('Laura Gómez'),
+  ('Alejandro García'),
+  ('Patricia Jiménez');
+
+
+INSERT INTO TiemposMax (tiempoMax) VALUES
+  ('10:00'),
+  ('09:00'),
+  ('30:00'),
+  ('16:00'),
+  ('17:00'),
+  ('19:00'),
+  ('30:00'),
+  ('18:00'),
+  ('30:00'),
+  ('16:00');
+
+
+INSERT INTO Tiempos (tiempoCronometrado, idTiempoMin, idTiempoMax) VALUES
+  ('00:45:00', 2, 5),
+  ('01:10:00', 3, 6),
+  ('01:25:00', 4, 7),
+  ('01:55:00', 5, 8),
+  ('02:00:00', 6, 9),
+  ('02:25:00', 7, 10),
+  ('02:45:00', 1, 1),
+  ('03:10:00', 2, 2),
+  ('03:35:00', 3, 3),
+  ('03:50:00', 4, 4);
+
+
+INSERT INTO TiempoActividades (idTiempos, idEmpleado, idObservador) VALUES
+  (1, 2, 1),
+  (2, 3, 2),
+  (3, 4, 1),
+  (4, 5, 2),
+  (5, 3, 4);
+
+
+

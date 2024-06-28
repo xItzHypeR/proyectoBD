@@ -20,15 +20,21 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         initComponents();
+        
+        
        
         panelEmpleados = new PanelEmpleados();
         panelInventario = new PanelInventario();
         panelGraficos = new PanelGraficos();
-      
+        
+        panelEmpleados.rellenarTabla();
+        panelEmpleados.showHistogram();
+        panelEmpleados.showBarChart();
+
+        
         menu1.addEventMenuSelected(new EventMenuSeleccionado() {
             @Override
             public void selected(int index) {
-                System.out.println("Select index: " + index);
                 if (index == 0) {
                     setForm(panelEmpleados);
                     
