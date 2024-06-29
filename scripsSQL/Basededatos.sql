@@ -125,6 +125,8 @@ CREATE TABLE DetallePedidos (
     FOREIGN KEY (idProducto) REFERENCES Productos(idProducto)
 );
 
+
+
 CREATE TABLE Facturas (
     idFactura INT PRIMARY KEY,
     idVenta INT,
@@ -168,7 +170,7 @@ CREATE TABLE Produccion (
     idEmpleado INT,
     FOREIGN KEY (idEmpleado) REFERENCES Empleados(idEmpleado)
 );
-
+/*
 CREATE TABLE TiemposMin (
     idTiempoMin INT auto_increment PRIMARY KEY,
     tiempoMin TIME
@@ -188,14 +190,14 @@ CREATE TABLE Tiempos (
     FOREIGN KEY (tiempoMin) REFERENCES TiemposMin(tiempoMin),
     FOREIGN KEY (tiempoMax) REFERENCES TiemposMax(tiempoMax)
 );
-
+*/
 
 CREATE TABLE Observadores (
     idObservador INT PRIMARY KEY,
     nombreObservador VARCHAR(255)
 );
 
-
+/*
 CREATE TABLE TiempoActividades (
     idTiempoActividad INT auto_increment PRIMARY KEY,
     idTiempos INT,
@@ -205,6 +207,7 @@ CREATE TABLE TiempoActividades (
     FOREIGN KEY (idEmpleado) REFERENCES Empleados(idEmpleado),
     FOREIGN KEY (idObservador) REFERENCES Observadores(idObservador)
 );
+*/
 
 
 INSERT INTO Empleados (nombreEmpleado, apellidoEmpleado, cargo, salario, telefono, email)
@@ -247,6 +250,20 @@ VALUES
   ('17:00:00'),
   ('18:00:00');
   */
+  
+INSERT INTO IngredientesPrincipales (idIngredientePrincipal, ingredientePrincipal)
+VALUES
+  (1, 'Romero y Miel'),
+  (2, 'Aloe Vera'),
+  (3, 'Propóleo'),
+  (4, 'Lavanda'),
+  (5, 'Hierbas Relajantes'),
+  (6, 'Eucalipto'),
+  (7, 'Ortiga y Manzanilla'),
+  (8, 'Hamamelis'),
+  (9, 'Árnica'),
+  (10, 'Menta');
+
   
 INSERT INTO Productos (nombreProducto, tipoProducto, fechaProduccion, fechaExpiracion, precio, idIngredientePrincipal)
 VALUES

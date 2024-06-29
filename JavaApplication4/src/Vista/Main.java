@@ -17,6 +17,7 @@ public class Main extends javax.swing.JFrame {
     private PanelEmpleados panelEmpleados;
     private PanelInventario panelInventario;
     private PanelGraficos panelGraficos;
+    
 
     public Main() {
         initComponents();
@@ -30,6 +31,8 @@ public class Main extends javax.swing.JFrame {
         panelEmpleados.rellenarTabla();
         panelEmpleados.showHistogram();
         panelEmpleados.showBarChart();
+        panelEmpleados.agregarMouseListenerTabla();
+        
 
         
         menu1.addEventMenuSelected(new EventMenuSeleccionado() {

@@ -22,6 +22,9 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+import Controller.ProduccionJpaController;
+import Entities.Produccion;
+
 /**
  *
  * @author gpera
@@ -30,11 +33,15 @@ public class FrameTest extends javax.swing.JFrame {
     
     EmpleadosJpaController ctrempleados = new EmpleadosJpaController();
     Empleados empleados = new Empleados();
+
+    ProduccionJpaController ctrproduccion = new ProduccionJpaController();
+    Produccion produccion = new Produccion();
     /**
      * Creates new form FrameTest
      */
     public FrameTest() {
         initComponents();
+        System.out.println(ctrproduccion.findCantidadProducidaByEmpleado(empleados));
         // showHistogram();
         rellenarTabla();
     }
