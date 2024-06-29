@@ -7,6 +7,7 @@ package Controller;
 
 import Controller.exceptions.NonexistentEntityException;
 import Controller.exceptions.PreexistingEntityException;
+import Entities.Empleados;
 import Entities.Produccion;
 import java.io.Serializable;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
@@ -27,6 +29,10 @@ public class ProduccionJpaController implements Serializable {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
+
+    public ProduccionJpaController() {
+        emf = Persistence.createEntityManagerFactory("MedicinaPU");
+    }
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
@@ -98,6 +104,19 @@ public class ProduccionJpaController implements Serializable {
     public List<Produccion> findProduccionEntities() {
         return findProduccionEntities(true, -1, -1);
     }
+    
+public List<Produccion> findProduccionByEmpleado(Empleados empleado) {
+    EntityManager em = getEntityManager();
+    try {
+        Query query = em.createQuery("SELECT p FROM Produccion p WHERE p.idEmpleado = :empleado");
+        query.setParameter("empleado", empleado);
+        return query.getResultList();
+    } finally {
+        em.close();
+    }
+}
+
+
 
     public List<Produccion> findProduccionEntities(int maxResults, int firstResult) {
         return findProduccionEntities(false, maxResults, firstResult);
@@ -140,5 +159,5 @@ public class ProduccionJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

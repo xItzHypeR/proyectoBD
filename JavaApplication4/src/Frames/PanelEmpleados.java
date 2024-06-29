@@ -22,6 +22,10 @@ import org.jfree.data.statistics.HistogramDataset;
 
 import Controller.EmpleadosJpaController;
 import Entities.Empleados;
+
+import Controller.ProduccionJpaController;
+import Entities.Produccion;
+
 /**
  *
  * @author gpera
@@ -31,59 +35,75 @@ public class PanelEmpleados extends javax.swing.JPanel {
     EmpleadosJpaController ctrempleados = new EmpleadosJpaController();
     Empleados empleados = new Empleados();
 
+    ProduccionJpaController ctrproduccion = new ProduccionJpaController();
+    Produccion produccion = new Produccion();
+
     /**
      * Creates new form PanelEmpleados
      */
     public PanelEmpleados() {
         initComponents();
-       // showBarChart();
-      rellenarTabla();
+        // showBarChart();
+        rellenarTabla();
     }
-    
+
     public void rellenarTabla() {
-        String columna[] = { "ID", "Nombre", "Apellido", "Cargo", "Salario", "Telefono", "Email" };
+        String columna[] = {"ID", "Nombre", "Apellido", "Cargo", "Salario", "Telefono", "Email", "Cantidad Producida"};
         DefaultTableModel modelo = new DefaultTableModel(columna, 0);
-        Object[] obj = new Object[7];
-        List ls;
+        Object[] obj = new Object[8];
+        List<Empleados> ls;
         try {
             ls = ctrempleados.findEmpleadosEntities();
-            for (int i = 0; i < ls.size(); i++) {
-                empleados = (Empleados) ls.get(i);
-                obj[0] = empleados.getIdEmpleado();
-                obj[1] = empleados.getNombreEmpleado();
-                obj[2] = empleados.getApellidoEmpleado();
-                obj[3] = empleados.getCargo();
-                obj[4] = empleados.getSalario();
-                obj[5] = empleados.getTelefono();
-                obj[6] = empleados.getEmail();
+            for (Empleados empleado : ls) {
+                obj[0] = empleado.getIdEmpleado();
+                obj[1] = empleado.getNombreEmpleado();
+                obj[2] = empleado.getApellidoEmpleado();
+                obj[3] = empleado.getCargo();
+                obj[4] = empleado.getSalario();
+                obj[5] = empleado.getTelefono();
+                obj[6] = empleado.getEmail();
+                int cantidadProducida = obtenerCantidadProducida(empleado);
+                obj[7] = cantidadProducida;
                 modelo.addRow(obj);
             }
             jtEmpleados.setModel(modelo);
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e + "Error");
         }
     }
 
+    private int obtenerCantidadProducida(Empleados empleado) {
+        int cantidadTotal = 0;
+        try {
+            List<Produccion> producciones = ctrproduccion.findProduccionByEmpleado(empleado);
+            for (Produccion produccion : producciones) {
+                cantidadTotal += produccion.getCantidadProducida();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e + "Error al obtener la cantidad producida");
+        }
+        return cantidadTotal;
+    }
+
     public void showHistogram() {
 
         double[] values = {95, 49, 14, 59, 50, 66, 47, 40, 1, 67,
-                                    12, 58, 28, 63, 14, 9, 31, 17, 94, 71,
-                                    49, 64, 73, 97, 15, 63, 10, 12, 31, 62,
-                                    93, 49, 74, 90, 59, 14, 15, 88, 26, 57,
-                                    77, 44, 58, 91, 10, 67, 57, 19, 88, 84
+            12, 58, 28, 63, 14, 9, 31, 17, 94, 71,
+            49, 64, 73, 97, 15, 63, 10, 12, 31, 62,
+            93, 49, 74, 90, 59, 14, 15, 88, 26, 57,
+            77, 44, 58, 91, 10, 67, 57, 19, 88, 84
         };
 
         HistogramDataset dataset = new HistogramDataset();
         dataset.addSeries("key", values, 20);
 
-        JFreeChart chart = ChartFactory.createHistogram("JFreeChart Histogram", 
-                "Data", 
-                "Frequency", 
-                dataset, 
+        JFreeChart chart = ChartFactory.createHistogram("JFreeChart Histogram",
+                "Data",
+                "Frequency",
+                dataset,
                 PlotOrientation.VERTICAL,
-                false, 
-                true, 
+                false,
+                true,
                 false
         );
         XYPlot plot = chart.getXYPlot();
@@ -92,29 +112,28 @@ public class PanelEmpleados extends javax.swing.JPanel {
         ChartPanel panel = new ChartPanel(chart);
         panel.setMouseWheelEnabled(true);
         panel.setPreferredSize(Histograma.getPreferredSize());
-        
+
         Histograma.setLayout(new BorderLayout());
         Histograma.add(panel, BorderLayout.NORTH);
-        
-        repaint();
-        
-    }
 
+        repaint();
+
+    }
 
     public void showBarChart() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.setValue(200, "Produccion", "january");
-        dataset.setValue(150, "Produccion", "february");
-        dataset.setValue(18, "Produccion", "march");
-        dataset.setValue(100, "Produccion", "april");
-        dataset.setValue(80, "Produccion", "may");
-        dataset.setValue(250, "Produccion", "june");
+        dataset.setValue(200, "Produccion", "Enero");
+        dataset.setValue(150, "Produccion", "Febrero");
+        dataset.setValue(18, "Produccion", "Marzo");
+        dataset.setValue(100, "Produccion", "Abril");
+        dataset.setValue(80, "Produccion", "Mayo");
+        dataset.setValue(250, "Produccion", "Junio");
 
         JFreeChart chart = ChartFactory.createBarChart("Grafico de empleados", "Mensual", "Produccion",
                 dataset, PlotOrientation.VERTICAL, false, true, false);
 
         CategoryPlot categoryPlot = chart.getCategoryPlot();
-        //categoryPlot.setRangeGridlinePaint(Color.BLUE);
+        categoryPlot.setRangeGridlinePaint(Color.BLUE);
         categoryPlot.setBackgroundPaint(Color.WHITE);
         BarRenderer renderer = (BarRenderer) categoryPlot.getRenderer();
         Color clr3 = new Color(204, 0, 51);
@@ -155,6 +174,8 @@ public class PanelEmpleados extends javax.swing.JPanel {
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Este es el panel empleados");
 
+        jtEmpleados.setBackground(new java.awt.Color(204, 204, 204));
+        jtEmpleados.setForeground(new java.awt.Color(0, 0, 0));
         jtEmpleados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -176,7 +197,7 @@ public class PanelEmpleados extends javax.swing.JPanel {
         Histograma.setLayout(HistogramaLayout);
         HistogramaLayout.setHorizontalGroup(
             HistogramaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 648, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         HistogramaLayout.setVerticalGroup(
             HistogramaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,34 +212,32 @@ public class PanelEmpleados extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1014, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(173, 173, 173)
-                        .addComponent(jLabel1)
-                        .addGap(0, 187, Short.MAX_VALUE)))
+                        .addGap(15, 15, 15)
+                        .addComponent(Histograma, javax.swing.GroupLayout.DEFAULT_SIZE, 1005, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Histograma, javax.swing.GroupLayout.PREFERRED_SIZE, 648, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(346, 346, 346)
+                .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Histograma, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
+                .addComponent(Histograma, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(108, 108, 108))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1026, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

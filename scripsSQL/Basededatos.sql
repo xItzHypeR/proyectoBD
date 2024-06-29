@@ -57,7 +57,7 @@ CREATE TABLE IngredientesPrincipales (
 );
 
 CREATE TABLE Productos (
-    idProducto INT PRIMARY KEY,
+    idProducto INT auto_increment PRIMARY KEY,
     nombreProducto VARCHAR(255),
     tipoProducto VARCHAR(255),
     fechaProduccion DATE,
@@ -220,7 +220,7 @@ VALUES
 ('Laura Gutiérrez', 'Díaz', 'Secretaria', 1700.00, '555-555-5563', 'laura.gutierrez@email.com'),
 ('Francisco Vázquez', 'Blanco', 'Mensajero', 1600.00, '555-555-5564', 'francisco.vazquez@email.com');
 
-
+/*
 INSERT INTO TiemposMin (tiempoMin)
 VALUES
   ('00:00:00'),
@@ -246,8 +246,9 @@ VALUES
   ('16:00:00'),
   ('17:00:00'),
   ('18:00:00');
+  */
   
-  INSERT INTO Productos (nombreProducto, tipoProducto, fechaProduccion, fechaExpiracion, precio, idIngredientePrincipal)
+INSERT INTO Productos (nombreProducto, tipoProducto, fechaProduccion, fechaExpiracion, precio, idIngredientePrincipal)
 VALUES
   ('Shampoo de Romero y Miel', 'Medicina natural', '2024-06-25', '2025-06-24', 15.50, 1),
   ('Crema facial de Aloe Vera', 'Medicina natural', '2024-06-22', '2025-06-21', 22.00, 2),
