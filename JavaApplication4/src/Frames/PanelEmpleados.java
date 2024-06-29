@@ -37,7 +37,7 @@ public class PanelEmpleados extends javax.swing.JPanel {
     public PanelEmpleados() {
         initComponents();
        // showBarChart();
-      //  rellenarTabla();
+      rellenarTabla();
     }
     
     public void rellenarTabla() {
@@ -103,14 +103,14 @@ public class PanelEmpleados extends javax.swing.JPanel {
 
     public void showBarChart() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.setValue(200, "Amount", "january");
-        dataset.setValue(150, "Amount", "february");
-        dataset.setValue(18, "Amount", "march");
-        dataset.setValue(100, "Amount", "april");
-        dataset.setValue(80, "Amount", "may");
-        dataset.setValue(250, "Amount", "june");
+        dataset.setValue(200, "Produccion", "january");
+        dataset.setValue(150, "Produccion", "february");
+        dataset.setValue(18, "Produccion", "march");
+        dataset.setValue(100, "Produccion", "april");
+        dataset.setValue(80, "Produccion", "may");
+        dataset.setValue(250, "Produccion", "june");
 
-        JFreeChart chart = ChartFactory.createBarChart("contribution", "monthly", "amount",
+        JFreeChart chart = ChartFactory.createBarChart("Grafico de empleados", "Mensual", "Produccion",
                 dataset, PlotOrientation.VERTICAL, false, true, false);
 
         CategoryPlot categoryPlot = chart.getCategoryPlot();

@@ -161,7 +161,7 @@ CREATE TABLE EmpleadoDepartamento (
 );
 
 CREATE TABLE Produccion (
-    idProduccion INT PRIMARY KEY,
+    idProduccion INT auto_increment PRIMARY KEY,
     idProducto INT,
     fechaProduccion DATE,
     cantidadProducida INT,
@@ -170,23 +170,25 @@ CREATE TABLE Produccion (
 );
 
 CREATE TABLE TiemposMin (
-    idTiempoMin INT PRIMARY KEY,
+    idTiempoMin INT auto_increment PRIMARY KEY,
     tiempoMin TIME
 );
 
 CREATE TABLE TiemposMax (
-    idTiempoMax INT PRIMARY KEY,
+    idTiempoMax INT auto_increment PRIMARY KEY,
     tiempoMax TIME
 );
 
 CREATE TABLE Tiempos (
     idTiempos INT PRIMARY KEY,
-    tiempoCronometrado TIME,
-    idTiempoMin INT,
-    idTiempoMax INT,
-    FOREIGN KEY (idTiempoMin) REFERENCES TiemposMin(idTiempoMin),
-    FOREIGN KEY (idTiempoMax) REFERENCES TiemposMax(idTiempoMax)
+	idEmpleado INT,
+    tiempoMin TIME,
+    tiempoMax TIME,
+    foreign key (idEmpleado) REFERENCES empleados(idEmpleado),
+    FOREIGN KEY (tiempoMin) REFERENCES TiemposMin(tiempoMin),
+    FOREIGN KEY (tiempoMax) REFERENCES TiemposMax(tiempoMax)
 );
+
 
 CREATE TABLE Observadores (
     idObservador INT PRIMARY KEY,
@@ -195,7 +197,7 @@ CREATE TABLE Observadores (
 
 
 CREATE TABLE TiempoActividades (
-    idTiempoActividad INT PRIMARY KEY,
+    idTiempoActividad INT auto_increment PRIMARY KEY,
     idTiempos INT,
     idEmpleado INT,
     idObservador INT,
@@ -204,7 +206,6 @@ CREATE TABLE TiempoActividades (
     FOREIGN KEY (idObservador) REFERENCES Observadores(idObservador)
 );
 
-alter table TiempoActividades modify column idTiempoActividad INT auto_increment;
 
 INSERT INTO Empleados (nombreEmpleado, apellidoEmpleado, cargo, salario, telefono, email)
 VALUES
@@ -220,63 +221,58 @@ VALUES
 ('Francisco Vázquez', 'Blanco', 'Mensajero', 1600.00, '555-555-5564', 'francisco.vazquez@email.com');
 
 
-INSERT INTO TiemposMin (tiempoMin) VALUES
-  ('01:00'),
-  ('05:00'),
-  ('03:00'),
-  ('05:00'),
-  ('04:00'),
-  ('05:00'),
-  ('03:00'),
-  ('05:00'),
-  ('01:00'),
-  ('14:00');
+INSERT INTO TiemposMin (tiempoMin)
+VALUES
+  ('00:00:00'),
+  ('01:00:00'),
+  ('02:00:00'),
+  ('03:00:00'),
+  ('04:00:00'),
+  ('05:00:00'),
+  ('06:00:00'),
+  ('07:00:00'),
+  ('08:00:00'),
+  ('09:00:00');
 
-INSERT INTO Observadores (nombreObservador) VALUES
-  ('Juan Pérez'),
-  ('Ana López'),
-  ('Carlos Gutiérrez'),
-  ('María Martínez'),
-  ('Pedro Rodríguez'),
-  ('Isabel Fernández'),
-  ('Diego Sánchez'),
-  ('Laura Gómez'),
-  ('Alejandro García'),
-  ('Patricia Jiménez');
-
-
-INSERT INTO TiemposMax (tiempoMax) VALUES
-  ('10:00'),
-  ('09:00'),
-  ('30:00'),
-  ('16:00'),
-  ('17:00'),
-  ('19:00'),
-  ('30:00'),
-  ('18:00'),
-  ('30:00'),
-  ('16:00');
-
-
-INSERT INTO Tiempos (tiempoCronometrado, idTiempoMin, idTiempoMax) VALUES
-  ('00:45:00', 2, 5),
-  ('01:10:00', 3, 6),
-  ('01:25:00', 4, 7),
-  ('01:55:00', 5, 8),
-  ('02:00:00', 6, 9),
-  ('02:25:00', 7, 10),
-  ('02:45:00', 1, 1),
-  ('03:10:00', 2, 2),
-  ('03:35:00', 3, 3),
-  ('03:50:00', 4, 4);
+INSERT INTO TiemposMax (tiempoMax)
+VALUES
+  ('09:00:00'),
+  ('10:00:00'),
+  ('11:00:00'),
+  ('12:00:00'),
+  ('13:00:00'),
+  ('14:00:00'),
+  ('15:00:00'),
+  ('16:00:00'),
+  ('17:00:00'),
+  ('18:00:00');
+  
+  INSERT INTO Productos (nombreProducto, tipoProducto, fechaProduccion, fechaExpiracion, precio, idIngredientePrincipal)
+VALUES
+  ('Shampoo de Romero y Miel', 'Medicina natural', '2024-06-25', '2025-06-24', 15.50, 1),
+  ('Crema facial de Aloe Vera', 'Medicina natural', '2024-06-22', '2025-06-21', 22.00, 2),
+  ('Jarabe para la tos con Propóleo', 'Medicina natural', '2024-06-20', '2024-12-20', 10.00, 3),
+  ('Jabón artesanal de lavanda', 'Medicina natural', '2024-06-27', '2025-06-26', 8.50, 4),
+  ('Infusión de hierbas relajantes', 'Medicina natural', '2024-06-24', '2024-12-24', 6.00, 5),
+  ('Aceite esencial de eucalipto', 'Medicina natural', '2024-06-28', '2025-06-27', 13.20, 6),
+  ('Shampoo de Ortiga y Manzanilla', 'Medicina natural', '2024-06-21', '2025-06-20', 17.75, 7),
+  ('Tónico facial de hamamelis', 'Medicina natural', '2024-06-26', '2025-06-25', 11.90, 8),
+  ('Pomada calmante de árnica', 'Medicina natural', '2024-06-23', '2024-12-23', 9.50, 9),
+  ('Dentífrico natural con menta', 'Medicina natural', '2024-06-25', '2025-06-24', 7.30, 10);
 
 
-INSERT INTO TiempoActividades (idTiempos, idEmpleado, idObservador) VALUES
-  (1, 2, 1),
-  (2, 3, 2),
-  (3, 4, 1),
-  (4, 5, 2),
-  (5, 3, 4);
+INSERT INTO Produccion (idProducto, fechaProduccion, cantidadProducida, idEmpleado)
+VALUES
+  (1, '2024-06-20', 100, 1),
+  (2, '2024-06-21', 50, 3),
+  (3, '2024-06-22', 75, 4),
+  (1, '2024-06-23', 120, 10),
+  (2, '2024-06-24', 65, 6),
+  (3, '2024-06-25', 80, 7),
+  (1, '2024-06-26', 150, 9),
+  (2, '2024-06-27', 90, 2),
+  (3, '2024-06-28', 105, 5),
+  (1, '2024-06-29', 130, 8);
 
 
 
