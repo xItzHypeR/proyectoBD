@@ -29,6 +29,13 @@ public class Main extends javax.swing.JFrame {
         panelEmpleados.showHistogram();
         panelEmpleados.showBarChart();
         panelEmpleados.agregarMouseListenerTabla();
+        
+        panelInventario.rellenarTabla();
+        
+
+
+
+      
 
         menu1.addEventMenuSelected(new EventMenuSeleccionado() {
             @Override
@@ -39,6 +46,7 @@ public class Main extends javax.swing.JFrame {
 
                 } else if (index == 1) {
                     setForm(panelInventario);
+                    panelInventario.rellenarTabla();
 
                 } else if (index == 2) {
                     setForm(panelGraficos);
@@ -100,8 +108,8 @@ public class Main extends javax.swing.JFrame {
             .addGroup(borde2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(borde2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(mainPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(menu1, javax.swing.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE)))
+                    .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 927, Short.MAX_VALUE)
+                    .addComponent(menu1, javax.swing.GroupLayout.DEFAULT_SIZE, 927, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
