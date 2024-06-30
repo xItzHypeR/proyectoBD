@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -30,6 +31,10 @@ public class IngredientesprincipalesJpaController implements Serializable {
     }
     private EntityManagerFactory emf = null;
 
+    public IngredientesprincipalesJpaController() {
+        emf = Persistence.createEntityManagerFactory("MedicinaPU");
+    }
+    
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
@@ -147,8 +152,15 @@ public class IngredientesprincipalesJpaController implements Serializable {
         }
     }
 
-    public List<Ingredientesprincipales> findIngredientesprincipalesEntities() {
-        return findIngredientesprincipalesEntities(true, -1, -1);
+    public List<Integer> findIngredientesprincipalesEntities(Productos producto) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createQuery("SELECT p.idIngredientePrincipal FROM Productos p WHERE p.idProducto = :idProducto");
+            query.setParameter("idProducto", producto.getIdProducto());
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
     }
 
     public List<Ingredientesprincipales> findIngredientesprincipalesEntities(int maxResults, int firstResult) {

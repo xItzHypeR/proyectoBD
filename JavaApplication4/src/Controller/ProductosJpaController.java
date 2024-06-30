@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import Entities.Productoingredientes;
 import Entities.Detalleventa;
+import Entities.Empleados;
 import Entities.Inventarios;
 import Entities.Productos;
 import javax.persistence.EntityManager;
@@ -63,30 +64,38 @@ public class ProductosJpaController implements Serializable {
             em.getTransaction().begin();
             Ingredientesprincipales idIngredientePrincipal = productos.getIdIngredientePrincipal();
             if (idIngredientePrincipal != null) {
-                idIngredientePrincipal = em.getReference(idIngredientePrincipal.getClass(), idIngredientePrincipal.getIdIngredientePrincipal());
+                idIngredientePrincipal = em.getReference(idIngredientePrincipal.getClass(),
+                        idIngredientePrincipal.getIdIngredientePrincipal());
                 productos.setIdIngredientePrincipal(idIngredientePrincipal);
             }
             List<Detallepedidos> attachedDetallepedidosList = new ArrayList<Detallepedidos>();
             for (Detallepedidos detallepedidosListDetallepedidosToAttach : productos.getDetallepedidosList()) {
-                detallepedidosListDetallepedidosToAttach = em.getReference(detallepedidosListDetallepedidosToAttach.getClass(), detallepedidosListDetallepedidosToAttach.getIdDetallePedidos());
+                detallepedidosListDetallepedidosToAttach = em.getReference(
+                        detallepedidosListDetallepedidosToAttach.getClass(),
+                        detallepedidosListDetallepedidosToAttach.getIdDetallePedidos());
                 attachedDetallepedidosList.add(detallepedidosListDetallepedidosToAttach);
             }
             productos.setDetallepedidosList(attachedDetallepedidosList);
             List<Productoingredientes> attachedProductoingredientesList = new ArrayList<Productoingredientes>();
-            for (Productoingredientes productoingredientesListProductoingredientesToAttach : productos.getProductoingredientesList()) {
-                productoingredientesListProductoingredientesToAttach = em.getReference(productoingredientesListProductoingredientesToAttach.getClass(), productoingredientesListProductoingredientesToAttach.getIdProductoIngrediente());
+            for (Productoingredientes productoingredientesListProductoingredientesToAttach : productos
+                    .getProductoingredientesList()) {
+                productoingredientesListProductoingredientesToAttach = em.getReference(
+                        productoingredientesListProductoingredientesToAttach.getClass(),
+                        productoingredientesListProductoingredientesToAttach.getIdProductoIngrediente());
                 attachedProductoingredientesList.add(productoingredientesListProductoingredientesToAttach);
             }
             productos.setProductoingredientesList(attachedProductoingredientesList);
             List<Detalleventa> attachedDetalleventaList = new ArrayList<Detalleventa>();
             for (Detalleventa detalleventaListDetalleventaToAttach : productos.getDetalleventaList()) {
-                detalleventaListDetalleventaToAttach = em.getReference(detalleventaListDetalleventaToAttach.getClass(), detalleventaListDetalleventaToAttach.getIdDetalleVenta());
+                detalleventaListDetalleventaToAttach = em.getReference(detalleventaListDetalleventaToAttach.getClass(),
+                        detalleventaListDetalleventaToAttach.getIdDetalleVenta());
                 attachedDetalleventaList.add(detalleventaListDetalleventaToAttach);
             }
             productos.setDetalleventaList(attachedDetalleventaList);
             List<Inventarios> attachedInventariosList = new ArrayList<Inventarios>();
             for (Inventarios inventariosListInventariosToAttach : productos.getInventariosList()) {
-                inventariosListInventariosToAttach = em.getReference(inventariosListInventariosToAttach.getClass(), inventariosListInventariosToAttach.getIdInventario());
+                inventariosListInventariosToAttach = em.getReference(inventariosListInventariosToAttach.getClass(),
+                        inventariosListInventariosToAttach.getIdInventario());
                 attachedInventariosList.add(inventariosListInventariosToAttach);
             }
             productos.setInventariosList(attachedInventariosList);
@@ -96,21 +105,28 @@ public class ProductosJpaController implements Serializable {
                 idIngredientePrincipal = em.merge(idIngredientePrincipal);
             }
             for (Detallepedidos detallepedidosListDetallepedidos : productos.getDetallepedidosList()) {
-                Productos oldIdProductoOfDetallepedidosListDetallepedidos = detallepedidosListDetallepedidos.getIdProducto();
+                Productos oldIdProductoOfDetallepedidosListDetallepedidos = detallepedidosListDetallepedidos
+                        .getIdProducto();
                 detallepedidosListDetallepedidos.setIdProducto(productos);
                 detallepedidosListDetallepedidos = em.merge(detallepedidosListDetallepedidos);
                 if (oldIdProductoOfDetallepedidosListDetallepedidos != null) {
-                    oldIdProductoOfDetallepedidosListDetallepedidos.getDetallepedidosList().remove(detallepedidosListDetallepedidos);
-                    oldIdProductoOfDetallepedidosListDetallepedidos = em.merge(oldIdProductoOfDetallepedidosListDetallepedidos);
+                    oldIdProductoOfDetallepedidosListDetallepedidos.getDetallepedidosList()
+                            .remove(detallepedidosListDetallepedidos);
+                    oldIdProductoOfDetallepedidosListDetallepedidos = em
+                            .merge(oldIdProductoOfDetallepedidosListDetallepedidos);
                 }
             }
-            for (Productoingredientes productoingredientesListProductoingredientes : productos.getProductoingredientesList()) {
-                Productos oldIdProductoOfProductoingredientesListProductoingredientes = productoingredientesListProductoingredientes.getIdProducto();
+            for (Productoingredientes productoingredientesListProductoingredientes : productos
+                    .getProductoingredientesList()) {
+                Productos oldIdProductoOfProductoingredientesListProductoingredientes = productoingredientesListProductoingredientes
+                        .getIdProducto();
                 productoingredientesListProductoingredientes.setIdProducto(productos);
                 productoingredientesListProductoingredientes = em.merge(productoingredientesListProductoingredientes);
                 if (oldIdProductoOfProductoingredientesListProductoingredientes != null) {
-                    oldIdProductoOfProductoingredientesListProductoingredientes.getProductoingredientesList().remove(productoingredientesListProductoingredientes);
-                    oldIdProductoOfProductoingredientesListProductoingredientes = em.merge(oldIdProductoOfProductoingredientesListProductoingredientes);
+                    oldIdProductoOfProductoingredientesListProductoingredientes.getProductoingredientesList()
+                            .remove(productoingredientesListProductoingredientes);
+                    oldIdProductoOfProductoingredientesListProductoingredientes = em
+                            .merge(oldIdProductoOfProductoingredientesListProductoingredientes);
                 }
             }
             for (Detalleventa detalleventaListDetalleventa : productos.getDetalleventaList()) {
@@ -118,7 +134,8 @@ public class ProductosJpaController implements Serializable {
                 detalleventaListDetalleventa.setIdProducto(productos);
                 detalleventaListDetalleventa = em.merge(detalleventaListDetalleventa);
                 if (oldIdProductoOfDetalleventaListDetalleventa != null) {
-                    oldIdProductoOfDetalleventaListDetalleventa.getDetalleventaList().remove(detalleventaListDetalleventa);
+                    oldIdProductoOfDetalleventaListDetalleventa.getDetalleventaList()
+                            .remove(detalleventaListDetalleventa);
                     oldIdProductoOfDetalleventaListDetalleventa = em.merge(oldIdProductoOfDetalleventaListDetalleventa);
                 }
             }
@@ -161,33 +178,42 @@ public class ProductosJpaController implements Serializable {
             List<Inventarios> inventariosListOld = persistentProductos.getInventariosList();
             List<Inventarios> inventariosListNew = productos.getInventariosList();
             if (idIngredientePrincipalNew != null) {
-                idIngredientePrincipalNew = em.getReference(idIngredientePrincipalNew.getClass(), idIngredientePrincipalNew.getIdIngredientePrincipal());
+                idIngredientePrincipalNew = em.getReference(idIngredientePrincipalNew.getClass(),
+                        idIngredientePrincipalNew.getIdIngredientePrincipal());
                 productos.setIdIngredientePrincipal(idIngredientePrincipalNew);
             }
             List<Detallepedidos> attachedDetallepedidosListNew = new ArrayList<Detallepedidos>();
             for (Detallepedidos detallepedidosListNewDetallepedidosToAttach : detallepedidosListNew) {
-                detallepedidosListNewDetallepedidosToAttach = em.getReference(detallepedidosListNewDetallepedidosToAttach.getClass(), detallepedidosListNewDetallepedidosToAttach.getIdDetallePedidos());
+                detallepedidosListNewDetallepedidosToAttach = em.getReference(
+                        detallepedidosListNewDetallepedidosToAttach.getClass(),
+                        detallepedidosListNewDetallepedidosToAttach.getIdDetallePedidos());
                 attachedDetallepedidosListNew.add(detallepedidosListNewDetallepedidosToAttach);
             }
             detallepedidosListNew = attachedDetallepedidosListNew;
             productos.setDetallepedidosList(detallepedidosListNew);
             List<Productoingredientes> attachedProductoingredientesListNew = new ArrayList<Productoingredientes>();
             for (Productoingredientes productoingredientesListNewProductoingredientesToAttach : productoingredientesListNew) {
-                productoingredientesListNewProductoingredientesToAttach = em.getReference(productoingredientesListNewProductoingredientesToAttach.getClass(), productoingredientesListNewProductoingredientesToAttach.getIdProductoIngrediente());
+                productoingredientesListNewProductoingredientesToAttach = em.getReference(
+                        productoingredientesListNewProductoingredientesToAttach.getClass(),
+                        productoingredientesListNewProductoingredientesToAttach.getIdProductoIngrediente());
                 attachedProductoingredientesListNew.add(productoingredientesListNewProductoingredientesToAttach);
             }
             productoingredientesListNew = attachedProductoingredientesListNew;
             productos.setProductoingredientesList(productoingredientesListNew);
             List<Detalleventa> attachedDetalleventaListNew = new ArrayList<Detalleventa>();
             for (Detalleventa detalleventaListNewDetalleventaToAttach : detalleventaListNew) {
-                detalleventaListNewDetalleventaToAttach = em.getReference(detalleventaListNewDetalleventaToAttach.getClass(), detalleventaListNewDetalleventaToAttach.getIdDetalleVenta());
+                detalleventaListNewDetalleventaToAttach = em.getReference(
+                        detalleventaListNewDetalleventaToAttach.getClass(),
+                        detalleventaListNewDetalleventaToAttach.getIdDetalleVenta());
                 attachedDetalleventaListNew.add(detalleventaListNewDetalleventaToAttach);
             }
             detalleventaListNew = attachedDetalleventaListNew;
             productos.setDetalleventaList(detalleventaListNew);
             List<Inventarios> attachedInventariosListNew = new ArrayList<Inventarios>();
             for (Inventarios inventariosListNewInventariosToAttach : inventariosListNew) {
-                inventariosListNewInventariosToAttach = em.getReference(inventariosListNewInventariosToAttach.getClass(), inventariosListNewInventariosToAttach.getIdInventario());
+                inventariosListNewInventariosToAttach = em.getReference(
+                        inventariosListNewInventariosToAttach.getClass(),
+                        inventariosListNewInventariosToAttach.getIdInventario());
                 attachedInventariosListNew.add(inventariosListNewInventariosToAttach);
             }
             inventariosListNew = attachedInventariosListNew;
@@ -209,29 +235,39 @@ public class ProductosJpaController implements Serializable {
             }
             for (Detallepedidos detallepedidosListNewDetallepedidos : detallepedidosListNew) {
                 if (!detallepedidosListOld.contains(detallepedidosListNewDetallepedidos)) {
-                    Productos oldIdProductoOfDetallepedidosListNewDetallepedidos = detallepedidosListNewDetallepedidos.getIdProducto();
+                    Productos oldIdProductoOfDetallepedidosListNewDetallepedidos = detallepedidosListNewDetallepedidos
+                            .getIdProducto();
                     detallepedidosListNewDetallepedidos.setIdProducto(productos);
                     detallepedidosListNewDetallepedidos = em.merge(detallepedidosListNewDetallepedidos);
-                    if (oldIdProductoOfDetallepedidosListNewDetallepedidos != null && !oldIdProductoOfDetallepedidosListNewDetallepedidos.equals(productos)) {
-                        oldIdProductoOfDetallepedidosListNewDetallepedidos.getDetallepedidosList().remove(detallepedidosListNewDetallepedidos);
-                        oldIdProductoOfDetallepedidosListNewDetallepedidos = em.merge(oldIdProductoOfDetallepedidosListNewDetallepedidos);
+                    if (oldIdProductoOfDetallepedidosListNewDetallepedidos != null
+                            && !oldIdProductoOfDetallepedidosListNewDetallepedidos.equals(productos)) {
+                        oldIdProductoOfDetallepedidosListNewDetallepedidos.getDetallepedidosList()
+                                .remove(detallepedidosListNewDetallepedidos);
+                        oldIdProductoOfDetallepedidosListNewDetallepedidos = em
+                                .merge(oldIdProductoOfDetallepedidosListNewDetallepedidos);
                     }
                 }
             }
             for (Productoingredientes productoingredientesListOldProductoingredientes : productoingredientesListOld) {
                 if (!productoingredientesListNew.contains(productoingredientesListOldProductoingredientes)) {
                     productoingredientesListOldProductoingredientes.setIdProducto(null);
-                    productoingredientesListOldProductoingredientes = em.merge(productoingredientesListOldProductoingredientes);
+                    productoingredientesListOldProductoingredientes = em
+                            .merge(productoingredientesListOldProductoingredientes);
                 }
             }
             for (Productoingredientes productoingredientesListNewProductoingredientes : productoingredientesListNew) {
                 if (!productoingredientesListOld.contains(productoingredientesListNewProductoingredientes)) {
-                    Productos oldIdProductoOfProductoingredientesListNewProductoingredientes = productoingredientesListNewProductoingredientes.getIdProducto();
+                    Productos oldIdProductoOfProductoingredientesListNewProductoingredientes = productoingredientesListNewProductoingredientes
+                            .getIdProducto();
                     productoingredientesListNewProductoingredientes.setIdProducto(productos);
-                    productoingredientesListNewProductoingredientes = em.merge(productoingredientesListNewProductoingredientes);
-                    if (oldIdProductoOfProductoingredientesListNewProductoingredientes != null && !oldIdProductoOfProductoingredientesListNewProductoingredientes.equals(productos)) {
-                        oldIdProductoOfProductoingredientesListNewProductoingredientes.getProductoingredientesList().remove(productoingredientesListNewProductoingredientes);
-                        oldIdProductoOfProductoingredientesListNewProductoingredientes = em.merge(oldIdProductoOfProductoingredientesListNewProductoingredientes);
+                    productoingredientesListNewProductoingredientes = em
+                            .merge(productoingredientesListNewProductoingredientes);
+                    if (oldIdProductoOfProductoingredientesListNewProductoingredientes != null
+                            && !oldIdProductoOfProductoingredientesListNewProductoingredientes.equals(productos)) {
+                        oldIdProductoOfProductoingredientesListNewProductoingredientes.getProductoingredientesList()
+                                .remove(productoingredientesListNewProductoingredientes);
+                        oldIdProductoOfProductoingredientesListNewProductoingredientes = em
+                                .merge(oldIdProductoOfProductoingredientesListNewProductoingredientes);
                     }
                 }
             }
@@ -243,12 +279,16 @@ public class ProductosJpaController implements Serializable {
             }
             for (Detalleventa detalleventaListNewDetalleventa : detalleventaListNew) {
                 if (!detalleventaListOld.contains(detalleventaListNewDetalleventa)) {
-                    Productos oldIdProductoOfDetalleventaListNewDetalleventa = detalleventaListNewDetalleventa.getIdProducto();
+                    Productos oldIdProductoOfDetalleventaListNewDetalleventa = detalleventaListNewDetalleventa
+                            .getIdProducto();
                     detalleventaListNewDetalleventa.setIdProducto(productos);
                     detalleventaListNewDetalleventa = em.merge(detalleventaListNewDetalleventa);
-                    if (oldIdProductoOfDetalleventaListNewDetalleventa != null && !oldIdProductoOfDetalleventaListNewDetalleventa.equals(productos)) {
-                        oldIdProductoOfDetalleventaListNewDetalleventa.getDetalleventaList().remove(detalleventaListNewDetalleventa);
-                        oldIdProductoOfDetalleventaListNewDetalleventa = em.merge(oldIdProductoOfDetalleventaListNewDetalleventa);
+                    if (oldIdProductoOfDetalleventaListNewDetalleventa != null
+                            && !oldIdProductoOfDetalleventaListNewDetalleventa.equals(productos)) {
+                        oldIdProductoOfDetalleventaListNewDetalleventa.getDetalleventaList()
+                                .remove(detalleventaListNewDetalleventa);
+                        oldIdProductoOfDetalleventaListNewDetalleventa = em
+                                .merge(oldIdProductoOfDetalleventaListNewDetalleventa);
                     }
                 }
             }
@@ -260,12 +300,16 @@ public class ProductosJpaController implements Serializable {
             }
             for (Inventarios inventariosListNewInventarios : inventariosListNew) {
                 if (!inventariosListOld.contains(inventariosListNewInventarios)) {
-                    Productos oldIdProductoOfInventariosListNewInventarios = inventariosListNewInventarios.getIdProducto();
+                    Productos oldIdProductoOfInventariosListNewInventarios = inventariosListNewInventarios
+                            .getIdProducto();
                     inventariosListNewInventarios.setIdProducto(productos);
                     inventariosListNewInventarios = em.merge(inventariosListNewInventarios);
-                    if (oldIdProductoOfInventariosListNewInventarios != null && !oldIdProductoOfInventariosListNewInventarios.equals(productos)) {
-                        oldIdProductoOfInventariosListNewInventarios.getInventariosList().remove(inventariosListNewInventarios);
-                        oldIdProductoOfInventariosListNewInventarios = em.merge(oldIdProductoOfInventariosListNewInventarios);
+                    if (oldIdProductoOfInventariosListNewInventarios != null
+                            && !oldIdProductoOfInventariosListNewInventarios.equals(productos)) {
+                        oldIdProductoOfInventariosListNewInventarios.getInventariosList()
+                                .remove(inventariosListNewInventarios);
+                        oldIdProductoOfInventariosListNewInventarios = em
+                                .merge(oldIdProductoOfInventariosListNewInventarios);
                     }
                 }
             }
@@ -378,4 +422,29 @@ public class ProductosJpaController implements Serializable {
         }
     }
 
+    public List<Integer> findProductosByIngredientePrincipal(Productos producto) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em
+                    .createQuery("SELECT p.idIngredientePrincipal FROM Productos p WHERE p.idProducto = :idProducto");
+            query.setParameter("idProducto", producto.getIdProducto());
+            return query.getResultList();
+
+        } finally {
+            em.close();
+        }
+
+    }
+
+    public List<Productos> findProductosByProducto(Productos producto) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createQuery("SELECT p.idProducto FROM Productos p WHERE p.idProducto = :idProducto");
+            query.setParameter("idProducto", producto.getIdProducto());
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+        
+    }
 }

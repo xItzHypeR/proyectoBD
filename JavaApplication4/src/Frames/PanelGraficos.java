@@ -23,6 +23,9 @@ import Controller.ProduccionJpaController;
 import Entities.Empleados;
 import Entities.Produccion;
 
+import Entities.Productos;
+import Controller.ProductosJpaController;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -37,6 +40,8 @@ public class PanelGraficos extends javax.swing.JPanel {
     ProduccionJpaController ctrproduccion = new ProduccionJpaController();
     Produccion produccion = new Produccion();
     
+    ProductosJpaController ctrproductos = new ProductosJpaController();
+    Productos productos = new Productos();
     
 
     /**
@@ -45,12 +50,15 @@ public class PanelGraficos extends javax.swing.JPanel {
     public PanelGraficos() {
         initComponents();
 
-        showHistogram();
-        showBarChart();
+        showHistogramEmpleados();
+        showBarChartEmpleados();
+
+        showHistogramInventario();
+        showBarChartInventario();
 
     }
 
-    public void showHistogram() {
+    public void showHistogramEmpleados() {
 
         double[] values = {95, 49, 14, 59, 50, 66, 47, 40, 1, 67,
             12, 58, 28, 63, 14, 9, 31, 17, 94, 71,
@@ -76,16 +84,16 @@ public class PanelGraficos extends javax.swing.JPanel {
 
         ChartPanel panel = new ChartPanel(chart);
         panel.setMouseWheelEnabled(true);
-        panel.setPreferredSize(Histograma.getPreferredSize());
+        panel.setPreferredSize(HistogramaEmpleados.getPreferredSize());
 
-        Histograma.setLayout(new BorderLayout());
-        Histograma.add(panel, BorderLayout.NORTH);
+        HistogramaEmpleados.setLayout(new BorderLayout());
+        HistogramaEmpleados.add(panel, BorderLayout.NORTH);
 
         repaint();
 
     }
 
-    public void showBarChart() {
+    public void showBarChartEmpleados() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         List<Empleados> empleadosList = ctrempleados.findEmpleadosEntities();
 
@@ -106,9 +114,9 @@ public class PanelGraficos extends javax.swing.JPanel {
         renderer.setSeriesPaint(0, clr3);
 
         ChartPanel barChartPanel = new ChartPanel(chart);
-        Histograma.removeAll();
-        Histograma.add(barChartPanel, BorderLayout.CENTER);
-        Histograma.validate();
+        HistogramaEmpleados.removeAll();
+        HistogramaEmpleados.add(barChartPanel, BorderLayout.CENTER);
+        HistogramaEmpleados.validate();
     }
 
     private int obtenerCantidadProducida(Empleados empleado) {
@@ -124,6 +132,79 @@ public class PanelGraficos extends javax.swing.JPanel {
         return cantidadTotal;
     }
 
+
+    public void showHistogramInventario() {
+
+        double[] values = {95, 49, 14, 59, 50, 66, 47, 40, 1, 67,
+            12, 58, 28, 63, 14, 9, 31, 17, 94, 71,
+            49, 64, 73, 97, 15, 63, 10, 12, 31, 62,
+            93, 49, 74, 90, 59, 14, 15, 88, 26, 57,
+            77, 44, 58, 91, 10, 67, 57, 19, 88, 84
+        };
+
+        HistogramDataset dataset = new HistogramDataset();
+        dataset.addSeries("key", values, 20);
+
+        JFreeChart chart = ChartFactory.createHistogram("JFreeChart Histogram",
+                "Data",
+                "Frequency",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false
+        );
+        XYPlot plot = chart.getXYPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+
+        ChartPanel panel = new ChartPanel(chart);
+        panel.setMouseWheelEnabled(true);
+        panel.setPreferredSize(HistogramaInventario.getPreferredSize());
+
+        HistogramaInventario.setLayout(new BorderLayout());
+        HistogramaInventario.add(panel, BorderLayout.NORTH);
+
+        repaint();
+
+    }
+
+    public void showBarChartInventario() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        List<Productos> productosList = ctrproductos.findProductosEntities();
+
+        for (Productos producto : productosList) {
+            int cantidadProductos = obtenerPrecioProductos(producto);
+            dataset.setValue(cantidadProductos, "Productos", producto.getNombreProducto());
+        }
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                "Gráfico de precios de productos", "Productos", "Precio",
+                dataset, PlotOrientation.VERTICAL, false, true, false);
+
+        CategoryPlot categoryPlot = chart.getCategoryPlot();
+        categoryPlot.setRangeGridlinePaint(Color.BLUE);
+        categoryPlot.setBackgroundPaint(Color.WHITE);
+        BarRenderer renderer = (BarRenderer) categoryPlot.getRenderer();
+        Color clr3 = new Color(204, 0, 51);
+        renderer.setSeriesPaint(0, clr3);
+
+        ChartPanel barChartPanel = new ChartPanel(chart);
+        HistogramaInventario.removeAll();
+        HistogramaInventario.add(barChartPanel, BorderLayout.CENTER);
+        HistogramaInventario.validate();
+    }
+
+
+    private int obtenerPrecioProductos(Productos producto) {
+        int precioTotal = 0;
+        try {
+            precioTotal += producto.getPrecio();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e + "Error al obtener el precio de los productos");
+        }
+        return precioTotal;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -135,7 +216,8 @@ public class PanelGraficos extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        Histograma = new javax.swing.JPanel();
+        HistogramaEmpleados = new javax.swing.JPanel();
+        HistogramaInventario = new javax.swing.JPanel();
 
         setPreferredSize(new java.awt.Dimension(1200, 800));
 
@@ -148,17 +230,31 @@ public class PanelGraficos extends javax.swing.JPanel {
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Este es el panel graficos");
 
-        Histograma.setMaximumSize(new java.awt.Dimension(100, 100));
-        Histograma.setMinimumSize(new java.awt.Dimension(100, 100));
+        HistogramaEmpleados.setMaximumSize(new java.awt.Dimension(100, 100));
+        HistogramaEmpleados.setMinimumSize(new java.awt.Dimension(100, 100));
 
-        javax.swing.GroupLayout HistogramaLayout = new javax.swing.GroupLayout(Histograma);
-        Histograma.setLayout(HistogramaLayout);
-        HistogramaLayout.setHorizontalGroup(
-            HistogramaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout HistogramaEmpleadosLayout = new javax.swing.GroupLayout(HistogramaEmpleados);
+        HistogramaEmpleados.setLayout(HistogramaEmpleadosLayout);
+        HistogramaEmpleadosLayout.setHorizontalGroup(
+            HistogramaEmpleadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1188, Short.MAX_VALUE)
+        );
+        HistogramaEmpleadosLayout.setVerticalGroup(
+            HistogramaEmpleadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 375, Short.MAX_VALUE)
+        );
+
+        HistogramaInventario.setMaximumSize(new java.awt.Dimension(100, 100));
+        HistogramaInventario.setMinimumSize(new java.awt.Dimension(100, 100));
+
+        javax.swing.GroupLayout HistogramaInventarioLayout = new javax.swing.GroupLayout(HistogramaInventario);
+        HistogramaInventario.setLayout(HistogramaInventarioLayout);
+        HistogramaInventarioLayout.setHorizontalGroup(
+            HistogramaInventarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        HistogramaLayout.setVerticalGroup(
-            HistogramaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        HistogramaInventarioLayout.setVerticalGroup(
+            HistogramaInventarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 363, Short.MAX_VALUE)
         );
 
@@ -172,7 +268,9 @@ public class PanelGraficos extends javax.swing.JPanel {
                 .addContainerGap(601, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(Histograma, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(HistogramaEmpleados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(HistogramaInventario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -181,25 +279,28 @@ public class PanelGraficos extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Histograma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(393, Short.MAX_VALUE))
+                .addComponent(HistogramaEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(HistogramaInventario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(82, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1178, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1200, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 876, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel Histograma;
+    private javax.swing.JPanel HistogramaEmpleados;
+    private javax.swing.JPanel HistogramaInventario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables

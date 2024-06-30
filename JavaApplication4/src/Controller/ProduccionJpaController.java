@@ -28,6 +28,7 @@ public class ProduccionJpaController implements Serializable {
     public ProduccionJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
+
     private EntityManagerFactory emf = null;
 
     public ProduccionJpaController() {
@@ -104,31 +105,28 @@ public class ProduccionJpaController implements Serializable {
     public List<Produccion> findProduccionEntities() {
         return findProduccionEntities(true, -1, -1);
     }
-    
-public List<Produccion> findProduccionByEmpleado(Empleados empleado) {
-    EntityManager em = getEntityManager();
-    try {
-        Query query = em.createQuery("SELECT p FROM Produccion p WHERE p.idEmpleado = :empleado");
-        query.setParameter("empleado", empleado);
-        return query.getResultList();
-    } finally {
-        em.close();
+
+    public List<Produccion> findProduccionByEmpleado(Empleados empleado) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createQuery("SELECT p FROM Produccion p WHERE p.idEmpleado = :empleado");
+            query.setParameter("empleado", empleado);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
     }
-}
-public List<Integer> findCantidadProducidaByEmpleado(Empleados empleado) {
-    EntityManager em = getEntityManager();
-    try {
-        Query query = em.createQuery("SELECT p.cantidadProducida FROM Produccion p WHERE p.idEmpleado.idEmpleado = :idEmpleado");
-        query.setParameter("idEmpleado", empleado.getIdEmpleado());
-        return query.getResultList();
-    } finally {
-        em.close();
+
+    public List<Integer> findCantidadProducidaByEmpleado(Empleados empleado) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query = em.createQuery("SELECT p.cantidadProducida FROM Produccion p WHERE p.idEmpleado.idEmpleado = :idEmpleado");
+            query.setParameter("idEmpleado", empleado.getIdEmpleado());
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
     }
-}
-
-
-
-
 
     public List<Produccion> findProduccionEntities(int maxResults, int firstResult) {
         return findProduccionEntities(false, maxResults, firstResult);
