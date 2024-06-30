@@ -22,6 +22,7 @@ import Entities.Inventarios;
 import Entities.Productos;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -32,7 +33,12 @@ public class ProductosJpaController implements Serializable {
     public ProductosJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
+
     private EntityManagerFactory emf = null;
+
+    public ProductosJpaController() {
+        emf = Persistence.createEntityManagerFactory("MedicinaPU");
+    }
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
@@ -371,5 +377,5 @@ public class ProductosJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }
