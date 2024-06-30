@@ -28,8 +28,16 @@ import Entities.Produccion;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import javax.swing.JTable;
 import javax.swing.table.TableRowSorter;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -52,31 +60,32 @@ public class PanelEmpleados extends javax.swing.JPanel {
         rellenarTabla();
         agregarMouseListenerTabla();
     }
-    
-    public void agregarMouseListenerTabla() {
-    jtEmpleados.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            if (evt.getClickCount() == 2) {
-                int row = jtEmpleados.getSelectedRow();
-                if (row != -1) {
-                    TFIdEmpleado.setText(jtEmpleados.getValueAt(row, 0).toString());
-                    TFNombreEmpleado.setText(jtEmpleados.getValueAt(row, 1).toString());
-                    TFApellidoEmpleado.setText(jtEmpleados.getValueAt(row, 2).toString());
-                    TFCargo.setText(jtEmpleados.getValueAt(row, 3).toString());
-                    TFSalario.setText(jtEmpleados.getValueAt(row, 4).toString());
-                    TFTelefono.setText(jtEmpleados.getValueAt(row, 5).toString());
-                    TFEmail.setText(jtEmpleados.getValueAt(row, 6).toString());
-                    TFCantidadP.setText(jtEmpleados.getValueAt(row, 7).toString());
 
-                    BTGuardar.setEnabled(false); // Deshabilitar botón Guardar
+    public void agregarMouseListenerTabla() {
+        jtEmpleados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    int row = jtEmpleados.getSelectedRow();
+                    if (row != -1) {
+                        TFIdEmpleado.setText(jtEmpleados.getValueAt(row, 0).toString());
+                        TFNombreEmpleado.setText(jtEmpleados.getValueAt(row, 1).toString());
+                        TFApellidoEmpleado.setText(jtEmpleados.getValueAt(row, 2).toString());
+                        TFCargo.setText(jtEmpleados.getValueAt(row, 3).toString());
+                        TFSalario.setText(jtEmpleados.getValueAt(row, 4).toString());
+                        TFTelefono.setText(jtEmpleados.getValueAt(row, 5).toString());
+                        TFEmail.setText(jtEmpleados.getValueAt(row, 6).toString());
+                        TFCantidadP.setText(jtEmpleados.getValueAt(row, 7).toString());
+
+                        BTGuardar.setEnabled(false); // Deshabilitar botón Guardar
+                    }
                 }
             }
-        }
-    });
-}
+        });
+    }
 
     public void rellenarTabla() {
-        String columna[] = {"ID", "Nombre", "Apellido", "Cargo", "Salario", "Telefono", "Email", "Cantidad Producida"};
+        String columna[] = { "ID", "Nombre", "Apellido", "Cargo", "Salario", "Telefono", "Email",
+                "Cantidad Producida" };
         DefaultTableModel modelo = new DefaultTableModel(columna, 0);
         Object[] obj = new Object[8];
         List<Empleados> ls;
@@ -93,43 +102,42 @@ public class PanelEmpleados extends javax.swing.JPanel {
                 int cantidadProducida = obtenerCantidadProducida(empleado);
                 obj[7] = cantidadProducida;
                 modelo.addRow(obj);
-                
-                 jtEmpleados.setAutoCreateRowSorter(true);
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
-        jtEmpleados.setRowSorter(sorter); 
-        
-        jtEmpleados.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent mouseEvent){
-                JTable table = (JTable) mouseEvent.getSource();
-                Point point = mouseEvent.getPoint();
-                
-                if(mouseEvent.getClickCount() == 2){
-                    TFIdEmpleado.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 0).toString());
-                    TFNombreEmpleado.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 1).toString());
-                    TFApellidoEmpleado.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 2).toString());
-                    TFCargo.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 3).toString());
-                    TFSalario.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 4).toString());
-                    TFTelefono.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 5).toString());
-                    TFEmail.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 6).toString());
-                    TFCantidadP.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 7).toString());
 
-                
-                    
-                }
-                
-                ActivarEditar();
-            }
-        });
+                jtEmpleados.setAutoCreateRowSorter(true);
+                TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
+                jtEmpleados.setRowSorter(sorter);
+
+                jtEmpleados.addMouseListener(new MouseAdapter() {
+                    public void mousePressed(MouseEvent mouseEvent) {
+                        JTable table = (JTable) mouseEvent.getSource();
+                        Point point = mouseEvent.getPoint();
+
+                        if (mouseEvent.getClickCount() == 2) {
+                            TFIdEmpleado.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 0).toString());
+                            TFNombreEmpleado
+                                    .setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 1).toString());
+                            TFApellidoEmpleado
+                                    .setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 2).toString());
+                            TFCargo.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 3).toString());
+                            TFSalario.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 4).toString());
+                            TFTelefono.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 5).toString());
+                            TFEmail.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 6).toString());
+                            TFCantidadP.setText(jtEmpleados.getValueAt(jtEmpleados.getSelectedRow(), 7).toString());
+
+                        }
+
+                        ActivarEditar();
+                    }
+                });
             }
             jtEmpleados.setModel(modelo);
-            
-            
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e + "Error");
         }
     }
 
-    public void ActivarEditar(){
+    public void ActivarEditar() {
         TFNombreEmpleado.setEnabled(true);
         TFApellidoEmpleado.setEnabled(true);
         TFCargo.setEnabled(true);
@@ -137,35 +145,34 @@ public class PanelEmpleados extends javax.swing.JPanel {
         TFTelefono.setEnabled(true);
         TFEmail.setEnabled(true);
         TFCantidadP.setEnabled(true);
-        
+
         BTGuardar.setEnabled(true);
         BTEditar.setEnabled(true);
         BTNuevo.setEnabled(false);
     }
 
     private int obtenerCantidadProducida(Empleados empleado) {
-    int cantidadTotal = 0;
-    try {
-        List<Integer> producciones = ctrproduccion.findCantidadProducidaByEmpleado(e);
-        for (Integer produccion : producciones) {
-            if (produccion != null) {
-                cantidadTotal += produccion;
+        int cantidadTotal = 0;
+        try {
+            List<Integer> producciones = ctrproduccion.findCantidadProducidaByEmpleado(empleado);
+            for (Integer produccion : producciones) {
+                if (produccion != null) {
+                    cantidadTotal += produccion;
+                }
             }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e + " Error al obtener la cantidad producida");
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, e + " Error al obtener la cantidad producida");
+        return cantidadTotal;
     }
-    return cantidadTotal;
-}
-
 
     public void showHistogram() {
 
-        double[] values = {95, 49, 14, 59, 50, 66, 47, 40, 1, 67,
-            12, 58, 28, 63, 14, 9, 31, 17, 94, 71,
-            49, 64, 73, 97, 15, 63, 10, 12, 31, 62,
-            93, 49, 74, 90, 59, 14, 15, 88, 26, 57,
-            77, 44, 58, 91, 10, 67, 57, 19, 88, 84
+        double[] values = { 95, 49, 14, 59, 50, 66, 47, 40, 1, 67,
+                12, 58, 28, 63, 14, 9, 31, 17, 94, 71,
+                49, 64, 73, 97, 15, 63, 10, 12, 31, 62,
+                93, 49, 74, 90, 59, 14, 15, 88, 26, 57,
+                77, 44, 58, 91, 10, 67, 57, 19, 88, 84
         };
 
         HistogramDataset dataset = new HistogramDataset();
@@ -178,20 +185,19 @@ public class PanelEmpleados extends javax.swing.JPanel {
                 PlotOrientation.VERTICAL,
                 false,
                 true,
-                false
-        );
+                false);
         XYPlot plot = chart.getXYPlot();
         plot.setBackgroundPaint(Color.WHITE);
 
         ChartPanel panel = new ChartPanel(chart);
         panel.setMouseWheelEnabled(true);
         /*
-        panel.setPreferredSize(Histograma.getPreferredSize());
-
-        Histograma.setLayout(new BorderLayout());
-        Histograma.add(panel, BorderLayout.NORTH);
-
-        
+         * panel.setPreferredSize(Histograma.getPreferredSize());
+         * 
+         * Histograma.setLayout(new BorderLayout());
+         * Histograma.add(panel, BorderLayout.NORTH);
+         * 
+         * 
          */
         repaint();
     }
@@ -216,11 +222,11 @@ public class PanelEmpleados extends javax.swing.JPanel {
         renderer.setSeriesPaint(0, clr3);
 
         /*
-        ChartPanel barpChartPanel = new ChartPanel(chart);
-
-        Histograma.removeAll();
-        Histograma.add(barpChartPanel, BorderLayout.CENTER);
-        Histograma.validate();
+         * ChartPanel barpChartPanel = new ChartPanel(chart);
+         * 
+         * Histograma.removeAll();
+         * Histograma.add(barpChartPanel, BorderLayout.CENTER);
+         * Histograma.validate();
          */
     }
 
@@ -230,6 +236,7 @@ public class PanelEmpleados extends javax.swing.JPanel {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -259,7 +266,7 @@ public class PanelEmpleados extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         TFIdProducto = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        TFIdProducto1 = new javax.swing.JTextField();
+        TFFechaP = new javax.swing.JTextField();
 
         setMaximumSize(new java.awt.Dimension(678, 600));
         setMinimumSize(new java.awt.Dimension(678, 600));
@@ -375,7 +382,7 @@ public class PanelEmpleados extends javax.swing.JPanel {
         jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setText("Fecha Produccion");
 
-        TFIdProducto1.setFont(new java.awt.Font("Dialog", 0, 20)); // NOI18N
+        TFFechaP.setFont(new java.awt.Font("Dialog", 0, 20)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -429,7 +436,7 @@ public class PanelEmpleados extends javax.swing.JPanel {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel11)
                                         .addGap(18, 18, 18)
-                                        .addComponent(TFIdProducto1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                        .addComponent(TFFechaP, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addGap(17, 17, 17))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -461,7 +468,7 @@ public class PanelEmpleados extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel11)
-                            .addComponent(TFIdProducto1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(TFFechaP, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(6, 6, 6)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -500,19 +507,19 @@ public class PanelEmpleados extends javax.swing.JPanel {
                         .addComponent(BTGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 996, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 838, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 830, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -531,8 +538,6 @@ public class PanelEmpleados extends javax.swing.JPanel {
         BTNuevo.setEnabled(true);
     }
 
-
- 
     private void BTEditarActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             // Validación para TFIdEmpleado
@@ -540,50 +545,85 @@ public class PanelEmpleados extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "ID de empleado inválido.");
                 return;
             }
-            empleados.setIdEmpleado(Integer.parseInt(TFIdEmpleado.getText()));
-    
-            empleados.setNombreEmpleado(TFNombreEmpleado.getText());
-            empleados.setApellidoEmpleado(TFApellidoEmpleado.getText());
-            empleados.setCargo(TFCargo.getText());
-    
+            
             // Validación para TFSalario
             if (TFSalario.getText().trim().isEmpty() || !TFSalario.getText().matches("\\d+(\\.\\d+)?")) {
                 JOptionPane.showMessageDialog(null, "Salario inválido.");
                 return;
             }
-            empleados.setSalario(Double.parseDouble(TFSalario.getText()));
-    
-            empleados.setTelefono(TFTelefono.getText());
-            empleados.setEmail(TFEmail.getText());
-    
+            
+            
             // Validación para TFCantidadP
             if (TFCantidadP.getText().trim().isEmpty() || !TFCantidadP.getText().matches("\\d+")) {
                 JOptionPane.showMessageDialog(null, "Cantidad producida inválida.");
                 return;
             }
-            produccion.setCantidadProducida(Integer.parseInt(TFCantidadP.getText()));
-    
+            
             // Validación para TFIdProducto
             if (TFIdProducto.getText().trim().isEmpty() || !TFIdProducto.getText().matches("\\d+")) {
                 JOptionPane.showMessageDialog(null, "ID de producto inválido.");
                 return;
             }
-            produccion.setIdProduccion(Integer.parseInt(TFIdProducto.getText()));
-    
+            empleados.setIdEmpleado(Integer.parseInt(TFIdEmpleado.getText()));
+            empleados.setNombreEmpleado(TFNombreEmpleado.getText());
+            empleados.setApellidoEmpleado(TFApellidoEmpleado.getText());
+            empleados.setCargo(TFCargo.getText());
+            empleados.setSalario(Double.parseDouble(TFSalario.getText()));
+            
+            empleados.setTelefono(TFTelefono.getText());
+            empleados.setEmail(TFEmail.getText());
+            produccion.setCantidadProducida(Integer.parseInt(TFCantidadP.getText()));
+            produccion.setIdProducto(Integer.parseInt(TFIdProducto.getText()));
+            produccion.setIdEmpleado(empleados);
+
+            updateEmpleado(empleados);
+            updateProduccion(produccion);
+
             BloquearControles();
             JOptionPane.showMessageDialog(null, "Editado Correctamente");
             rellenarTabla();
-    
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e + " Error");
         }
     }
 
+    public void updateEmpleado(Empleados empleado) {
+        String sql = "UPDATE empleados SET nombreEmpleado=?, apellidoEmpleado=?, cargo=?, salario=?, telefono=?, email=? WHERE idEmpleado=?";
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/medicinanatural", "root", "rootsito");
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, empleado.getNombreEmpleado());
+            pstmt.setString(2, empleado.getApellidoEmpleado());
+            pstmt.setString(3, empleado.getCargo());
+            pstmt.setDouble(4, empleado.getSalario());
+            pstmt.setString(5, empleado.getTelefono());
+            pstmt.setString(6, empleado.getEmail());
+            pstmt.setInt(7, empleado.getIdEmpleado());
+            
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateProduccion(Produccion produccion) {
+        String sql = "UPDATE produccion SET cantidadProducida=?, idProducto=? WHERE idEmpleado=?";
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/medicinanatural", "root", "rootsito");
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, produccion.getCantidadProducida());
+            pstmt.setInt(2, produccion.getIdProducto());
+            pstmt.setInt(3, produccion.getIdEmpleado().getIdEmpleado());
+            
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-//GEN-LAST:event_BTEditarActionPerformed
-
-    private void BTNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNuevoActionPerformed
-      //vaciar todos los textfields
+    private void BTNuevoActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BTNuevoActionPerformed
+        // vaciar todos los textfields
         TFIdEmpleado.setText("");
         TFNombreEmpleado.setText("");
         TFApellidoEmpleado.setText("");
@@ -594,7 +634,7 @@ public class PanelEmpleados extends javax.swing.JPanel {
         TFCantidadP.setText("");
         TFIdProducto.setText("");
 
-        //habilitar los textfields
+        // habilitar los textfields
         TFNombreEmpleado.setEnabled(true);
         TFApellidoEmpleado.setEnabled(true);
         TFCargo.setEnabled(true);
@@ -602,15 +642,15 @@ public class PanelEmpleados extends javax.swing.JPanel {
         TFTelefono.setEnabled(true);
         TFEmail.setEnabled(true);
         TFCantidadP.setEnabled(true);
-        
-        //habilitar los botones
+
+        // habilitar los botones
         BTGuardar.setEnabled(true);
         BTEditar.setEnabled(true);
         BTNuevo.setEnabled(false);
 
-    }//GEN-LAST:event_BTNuevoActionPerformed
+    }// GEN-LAST:event_BTNuevoActionPerformed
 
-    private void BTGuardarActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    private void BTGuardarActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             empleados.setNombreEmpleado(TFNombreEmpleado.getText());
             empleados.setApellidoEmpleado(TFApellidoEmpleado.getText());
@@ -619,20 +659,25 @@ public class PanelEmpleados extends javax.swing.JPanel {
             empleados.setTelefono(TFTelefono.getText());
             empleados.setEmail(TFEmail.getText());
             produccion.setCantidadProducida(Integer.parseInt(TFCantidadP.getText()));
-    
+            produccion.setIdProducto(Integer.parseInt(TFIdProducto.getText()));
+            produccion.setIdEmpleado(empleados);
+
+            // Convertir la fecha de String a Date
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+            Date fechaProduccion = formatoFecha.parse(TFFechaP.getText());
+            produccion.setFechaProduccion(fechaProduccion);
+
             ctrempleados.create(empleados);
             ctrproduccion.create(produccion);
-            
-    
+
             BloquearControles();
             JOptionPane.showMessageDialog(null, "Guardado Correctamente");
-            rellenarTabla();  // Refresh the table after saving
+            rellenarTabla(); // Refresh the table after saving
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e + " Error");
         }
     }
-         
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BTEditar;
     private javax.swing.JButton BTGuardar;
@@ -641,9 +686,9 @@ public class PanelEmpleados extends javax.swing.JPanel {
     private javax.swing.JTextField TFCantidadP;
     private javax.swing.JTextField TFCargo;
     private javax.swing.JTextField TFEmail;
+    private javax.swing.JTextField TFFechaP;
     private javax.swing.JTextField TFIdEmpleado;
     private javax.swing.JTextField TFIdProducto;
-    private javax.swing.JTextField TFIdProducto1;
     private javax.swing.JTextField TFNombreEmpleado;
     private javax.swing.JTextField TFSalario;
     private javax.swing.JTextField TFTelefono;

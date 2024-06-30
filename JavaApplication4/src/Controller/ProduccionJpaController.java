@@ -118,9 +118,8 @@ public List<Produccion> findProduccionByEmpleado(Empleados empleado) {
 public List<Integer> findCantidadProducidaByEmpleado(Empleados empleado) {
     EntityManager em = getEntityManager();
     try {
-        // Assuming p.idEmpleado is an Empleados entity
-        Query query = em.createQuery("SELECT p.cantidadProducida FROM Produccion p WHERE p.idEmpleado = :empleado");
-        query.setParameter("empleado", empleado);
+        Query query = em.createQuery("SELECT p.cantidadProducida FROM Produccion p WHERE p.idEmpleado.idEmpleado = :idEmpleado");
+        query.setParameter("idEmpleado", empleado.getIdEmpleado());
         return query.getResultList();
     } finally {
         em.close();

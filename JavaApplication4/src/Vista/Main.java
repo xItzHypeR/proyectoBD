@@ -11,41 +11,39 @@ import Frames.PanelGraficos;
 import javax.swing.JComponent;
 
 import principal.EventMenuSeleccionado;
-        
+
 public class Main extends javax.swing.JFrame {
 
     private PanelEmpleados panelEmpleados;
     private PanelInventario panelInventario;
     private PanelGraficos panelGraficos;
-    
 
     public Main() {
         initComponents();
-        
-        
-       
+
         panelEmpleados = new PanelEmpleados();
         panelInventario = new PanelInventario();
         panelGraficos = new PanelGraficos();
-        
+
         panelEmpleados.rellenarTabla();
         panelEmpleados.showHistogram();
         panelEmpleados.showBarChart();
         panelEmpleados.agregarMouseListenerTabla();
-        
 
-        
         menu1.addEventMenuSelected(new EventMenuSeleccionado() {
             @Override
             public void selected(int index) {
                 if (index == 0) {
                     setForm(panelEmpleados);
-                    
+                    panelEmpleados.rellenarTabla();
+
                 } else if (index == 1) {
                     setForm(panelInventario);
-                    
+
                 } else if (index == 2) {
                     setForm(panelGraficos);
+                    panelEmpleados.showHistogram();
+                    panelEmpleados.showBarChart();
 
                 } else if (index == 7) {
                     System.exit(0);
@@ -53,16 +51,16 @@ public class Main extends javax.swing.JFrame {
 
             }
         });
-         setForm(new PanelEmpleados());
+        setForm(new PanelEmpleados());
     }
-    
 
-        private void setForm(JComponent com) {
+    private void setForm(JComponent com) {
         mainPanel.removeAll();
         mainPanel.add(com);
         mainPanel.repaint();
         mainPanel.revalidate();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,11 +97,11 @@ public class Main extends javax.swing.JFrame {
         );
         borde2Layout.setVerticalGroup(
             borde2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borde2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(borde2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(menu1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(borde2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(borde2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(mainPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(menu1, javax.swing.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -158,14 +156,14 @@ public class Main extends javax.swing.JFrame {
             }
         });
     }
-    
+
     /*
         public void addEventMenuSeleccionado(EventMenuSeleccionado event) {
         this.event = event;
         listMenu1.addEventMenuSelected(event);
     }
-*/
-    
+     */
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private Vista.Borde borde2;
     private javax.swing.ButtonGroup buttonGroup1;

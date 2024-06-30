@@ -78,8 +78,8 @@ public class Produccion implements Serializable {
         return fechaProduccion;
     }
 
-    public void setFechaProduccion(Date fechaProduccion) {
-        this.fechaProduccion = fechaProduccion;
+    public void setFechaProduccion(Date string) {
+        this.fechaProduccion = string;
     }
 
     public Integer getCantidadProducida() {
