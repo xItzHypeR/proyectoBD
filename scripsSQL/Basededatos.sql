@@ -67,6 +67,19 @@ CREATE TABLE Productos (
     FOREIGN KEY (idIngredientePrincipal) REFERENCES IngredientesPrincipales(idIngredientePrincipal)
 );
 
+DELIMITER $$
+
+CREATE TRIGGER SetFechaExpiracion
+BEFORE INSERT ON Productos
+FOR EACH ROW
+BEGIN
+    IF NEW.fechaExpiracion IS NULL THEN
+        SET NEW.fechaExpiracion = DATE_ADD(NEW.fechaProduccion, INTERVAL 3 YEAR);
+    END IF;
+END$$
+
+DELIMITER ;
+
 CREATE TABLE ProductoIngredientes (
     idProductoIngrediente INT PRIMARY KEY,
     idProducto INT,
