@@ -280,16 +280,16 @@ VALUES
   
 INSERT INTO Productos (nombreProducto, tipoProducto, fechaProduccion, fechaExpiracion, precio, idIngredientePrincipal)
 VALUES
-  ('Shampoo de Romero y Miel', 'Medicina natural', '2024-06-25', '2025-06-24', 15.50, 1),
-  ('Crema facial de Aloe Vera', 'Medicina natural', '2024-06-22', '2025-06-21', 22.00, 2),
-  ('Jarabe para la tos con Propóleo', 'Medicina natural', '2024-06-20', '2024-12-20', 10.00, 3),
-  ('Jabón artesanal de lavanda', 'Medicina natural', '2024-06-27', '2025-06-26', 8.50, 4),
-  ('Infusión de hierbas relajantes', 'Medicina natural', '2024-06-24', '2024-12-24', 6.00, 5),
-  ('Aceite esencial de eucalipto', 'Medicina natural', '2024-06-28', '2025-06-27', 13.20, 6),
-  ('Shampoo de Ortiga y Manzanilla', 'Medicina natural', '2024-06-21', '2025-06-20', 17.75, 7),
-  ('Tónico facial de hamamelis', 'Medicina natural', '2024-06-26', '2025-06-25', 11.90, 8),
-  ('Pomada calmante de árnica', 'Medicina natural', '2024-06-23', '2024-12-23', 9.50, 9),
-  ('Dentífrico natural con menta', 'Medicina natural', '2024-06-25', '2025-06-24', 7.30, 10);
+  ('Shampoo de Romero y Miel', 'Medicina natural', '2024-06-25', '2025-06-24', 45.00, 1),
+  ('Crema facial de Aloe Vera', 'Medicina natural', '2024-06-22', '2025-06-21', 30.00, 2),
+  ('Jarabe para la tos con Propóleo', 'Medicina natural', '2024-06-20', '2024-12-20', 25.00, 3),
+  ('Jabón artesanal de lavanda', 'Medicina natural', '2024-06-27', '2025-06-26', 23.00, 4),
+  ('Infusión de hierbas relajantes', 'Medicina natural', '2024-06-24', '2024-12-24', 20.00, 5),
+  ('Aceite esencial de eucalipto', 'Medicina natural', '2024-06-28', '2025-06-27', 14.00, 6),
+  ('Shampoo de Ortiga y Manzanilla', 'Medicina natural', '2024-06-21', '2025-06-20', 12.00, 7),
+  ('Tónico facial de hamamelis', 'Medicina natural', '2024-06-26', '2025-06-25', 11.00, 8),
+  ('Pomada calmante de árnica', 'Medicina natural', '2024-06-23', '2024-12-23', 10.00, 9),
+  ('Dentífrico natural con menta', 'Medicina natural', '2024-06-25', '2025-06-24', 7.00, 10);
 
 
 INSERT INTO Produccion (idProducto, fechaProduccion, cantidadProducida, idEmpleado)

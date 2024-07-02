@@ -27,6 +27,8 @@ import Entities.Productos;
 import Controller.ProductosJpaController;
 
 import javax.swing.JOptionPane;
+import org.jfree.chart.plot.DatasetRenderingOrder;
+import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 
 /**
  *
@@ -94,30 +96,58 @@ public class PanelGraficos extends javax.swing.JPanel {
     }
 
     public void showBarChartEmpleados() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        List<Empleados> empleadosList = ctrempleados.findEmpleadosEntities();
+    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    List<Empleados> empleadosList = ctrempleados.findEmpleadosEntities();
+    
+    // Ordenar empleados por cantidad producida en orden descendente
+    empleadosList.sort((e1, e2) -> Integer.compare(obtenerCantidadProducida(e2), obtenerCantidadProducida(e1)));
 
-        for (Empleados empleado : empleadosList) {
-            int cantidadProducida = obtenerCantidadProducida(empleado);
-            dataset.setValue(cantidadProducida, "Producción", empleado.getNombreEmpleado());
-        }
-
-        JFreeChart chart = ChartFactory.createBarChart(
-                "Gráfico de Producción por Empleado", "Empleado", "Producción",
-                dataset, PlotOrientation.VERTICAL, false, true, false);
-
-        CategoryPlot categoryPlot = chart.getCategoryPlot();
-        categoryPlot.setRangeGridlinePaint(Color.BLUE);
-        categoryPlot.setBackgroundPaint(Color.WHITE);
-        BarRenderer renderer = (BarRenderer) categoryPlot.getRenderer();
-        Color clr3 = new Color(204, 0, 51);
-        renderer.setSeriesPaint(0, clr3);
-
-        ChartPanel barChartPanel = new ChartPanel(chart);
-        HistogramaEmpleados.removeAll();
-        HistogramaEmpleados.add(barChartPanel, BorderLayout.CENTER);
-        HistogramaEmpleados.validate();
+    // Crear el dataset de las barras
+    for (Empleados empleado : empleadosList) {
+        int cantidadProducida = obtenerCantidadProducida(empleado);
+        dataset.setValue(cantidadProducida, "Producción", empleado.getNombreEmpleado());
     }
+
+    JFreeChart chart = ChartFactory.createBarChart(
+            "Gráfico de Producción por Empleado", "Empleado", "Producción",
+            dataset, PlotOrientation.VERTICAL, false, true, false);
+
+    CategoryPlot plot = chart.getCategoryPlot();
+    plot.setRangeGridlinePaint(Color.BLUE);
+    plot.setBackgroundPaint(Color.WHITE);
+    BarRenderer renderer = (BarRenderer) plot.getRenderer();
+    Color clr3 = new Color(204, 0, 51);
+    renderer.setSeriesPaint(0, clr3);
+
+    // Crear el dataset de la línea de acumulación
+    double totalProduccion = empleadosList.stream().mapToInt(this::obtenerCantidadProducida).sum();
+    double acumulado = 0.0;
+    DefaultCategoryDataset lineDataset = new DefaultCategoryDataset();
+
+    for (Empleados empleado : empleadosList) {
+        int cantidadProducida = obtenerCantidadProducida(empleado);
+        acumulado += cantidadProducida;
+        double porcentajeAcumulado = (acumulado / totalProduccion) * 100.0;
+        lineDataset.addValue(porcentajeAcumulado, "Acumulado", empleado.getNombreEmpleado());
+    }
+
+    // Añadir el dataset de la línea al gráfico
+    plot.setDataset(1, lineDataset);
+    plot.mapDatasetToRangeAxis(1, 0);
+
+    // Crear y personalizar el renderizador de la línea
+    LineAndShapeRenderer lineRenderer = new LineAndShapeRenderer();
+    plot.setRenderer(1, lineRenderer);
+
+    // Establecer el orden de renderización de los datasets
+    plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
+
+    // Mostrar el gráfico en el panel
+    ChartPanel barChartPanel = new ChartPanel(chart);
+    HistogramaEmpleados.removeAll();
+    HistogramaEmpleados.add(barChartPanel, BorderLayout.CENTER);
+    HistogramaEmpleados.validate();
+}
 
     private int obtenerCantidadProducida(Empleados empleado) {
         int cantidadTotal = 0;
@@ -169,30 +199,58 @@ public class PanelGraficos extends javax.swing.JPanel {
     }
 
     public void showBarChartInventario() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        List<Productos> productosList = ctrproductos.findProductosEntities();
+    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    List<Productos> productosList = ctrproductos.findProductosEntities();
 
-        for (Productos producto : productosList) {
-            int cantidadProductos = obtenerPrecioProductos(producto);
-            dataset.setValue(cantidadProductos, "Productos", producto.getNombreProducto());
-        }
+    // Ordenar productos por precio en orden descendente
+    productosList.sort((p1, p2) -> Double.compare(obtenerPrecioProductos(p2), obtenerPrecioProductos(p1)));
 
-        JFreeChart chart = ChartFactory.createBarChart(
-                "Gráfico de precios de productos", "Productos", "Precio",
-                dataset, PlotOrientation.VERTICAL, false, true, false);
-
-        CategoryPlot categoryPlot = chart.getCategoryPlot();
-        categoryPlot.setRangeGridlinePaint(Color.BLUE);
-        categoryPlot.setBackgroundPaint(Color.WHITE);
-        BarRenderer renderer = (BarRenderer) categoryPlot.getRenderer();
-        Color clr3 = new Color(204, 0, 51);
-        renderer.setSeriesPaint(0, clr3);
-
-        ChartPanel barChartPanel = new ChartPanel(chart);
-        HistogramaInventario.removeAll();
-        HistogramaInventario.add(barChartPanel, BorderLayout.CENTER);
-        HistogramaInventario.validate();
+    // Crear el dataset de las barras
+    for (Productos producto : productosList) {
+        double precioProducto = obtenerPrecioProductos(producto);
+        dataset.setValue(precioProducto, "Productos", producto.getNombreProducto());
     }
+
+    JFreeChart chart = ChartFactory.createBarChart(
+            "Gráfico de precios de productos", "Productos", "Precio",
+            dataset, PlotOrientation.VERTICAL, false, true, false);
+
+    CategoryPlot plot = chart.getCategoryPlot();
+    plot.setRangeGridlinePaint(Color.BLUE);
+    plot.setBackgroundPaint(Color.WHITE);
+    BarRenderer renderer = (BarRenderer) plot.getRenderer();
+    Color clr3 = new Color(204, 0, 51);
+    renderer.setSeriesPaint(0, clr3);
+
+    // Crear el dataset de la línea de acumulación
+    double totalPrecio = productosList.stream().mapToDouble(this::obtenerPrecioProductos).sum();
+    double acumulado = 0.0;
+    DefaultCategoryDataset lineDataset = new DefaultCategoryDataset();
+
+    for (Productos producto : productosList) {
+        double precioProducto = obtenerPrecioProductos(producto);
+        acumulado += precioProducto;
+        double porcentajeAcumulado = (acumulado / totalPrecio) * 100.0;
+        lineDataset.addValue(porcentajeAcumulado, "Acumulado", producto.getNombreProducto());
+    }
+
+    // Añadir el dataset de la línea al gráfico
+    plot.setDataset(1, lineDataset);
+    plot.mapDatasetToRangeAxis(1, 0);
+
+    // Crear y personalizar el renderizador de la línea
+    LineAndShapeRenderer lineRenderer = new LineAndShapeRenderer();
+    plot.setRenderer(1, lineRenderer);
+
+    // Establecer el orden de renderización de los datasets
+    plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
+
+    // Mostrar el gráfico en el panel
+    ChartPanel barChartPanel = new ChartPanel(chart);
+    HistogramaInventario.removeAll();
+    HistogramaInventario.add(barChartPanel, BorderLayout.CENTER);
+    HistogramaInventario.validate();
+}
 
 
     private int obtenerPrecioProductos(Productos producto) {
